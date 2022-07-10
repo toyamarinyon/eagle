@@ -1,0 +1,11 @@
+{
+  "extends": "@tsconfig/esm/tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "downlevelIteration": true,
+    "strict": true,
+    "target": "es2021",
+    "lib": ["dom", "es2021"]
+  },
+  "exclude": ["node_modules"]
+}

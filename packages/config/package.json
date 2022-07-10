@@ -1,0 +1,16 @@
+{
+  "name": "@eagle/config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "files": [
+    "base.json",
+    "cloudflare.json",
+    "vite.config.ts"
+  ],
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.14.0",
+    "@tsconfig/esm": "^1.0.1",
+    "vitest": "^0.17.1"
+  }
+}
