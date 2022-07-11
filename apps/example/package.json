@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "wrangler dev",
-    "build": "eagle build"
+    "build": "node ../../packages/eagle/dist/index.js build"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.0",
