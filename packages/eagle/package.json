@@ -12,8 +12,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
     "@eagle/config": "workspace:^0.0.0",
     "@types/cross-spawn": "^6.0.2",
@@ -25,5 +23,11 @@
     "commander": "^9.3.0",
     "cross-spawn": "^7.0.3",
     "esbuild": "^0.14.48"
-  }
+  },
+  "author": "@toyamarinyon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/toyamarinyon/eagle/issues"
+  },
+  "homepage": "https://github.com/toyamarinyon/eagle"
 }

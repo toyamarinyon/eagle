@@ -10,11 +10,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "license": "MIT",
   "dependencies": {
     "eaglejs": "workspace:^0.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.14.48"
-  }
+  },
+  "author": "@toyamarinyon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/toyamarinyon/eagle/issues"
+  },
+  "homepage": "https://github.com/toyamarinyon/eagle"
 }

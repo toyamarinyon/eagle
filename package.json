@@ -26,5 +26,15 @@
     "@changesets/changelog-github": "^0.4.5",
     "@changesets/cli": "^2.23.1"
   },
-  "packageManager": "pnpm@7.4.1"
+  "packageManager": "pnpm@7.4.1",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/toyamarinyon/eagle.git"
+  },
+  "author": "@toyamarinyon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/toyamarinyon/eagle/issues"
+  },
+  "homepage": "https://github.com/toyamarinyon/eagle"
 }
