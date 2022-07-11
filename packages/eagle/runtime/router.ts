@@ -11,7 +11,7 @@ export async function router(request: Request, routes: Routes) {
   }
   const pageFile = routes[pathname];
   const page = await pageFile();
-  return page
+  return page;
 }
 
 export function pathnameToFilePath(pathname: string): string {
