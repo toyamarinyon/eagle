@@ -20,6 +20,8 @@
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@changesets/cli": "^2.23.1"
+  },
   "packageManager": "pnpm@7.4.1"
 }
