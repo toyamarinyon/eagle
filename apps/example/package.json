@@ -1,0 +1,14 @@
+{
+  "name": "sample3",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "wrangler dev",
+    "build": "eagle build"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.14.0",
+    "eaglejs": "workspace:^0.0.0",
+    "wrangler": "^2.0.16"
+  }
+}

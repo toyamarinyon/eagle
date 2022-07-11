@@ -1,0 +1,7 @@
+
+name = "eaglejs-example"
+main = "dist/index.mjs"
+compatibility_date = "2022-07-11"
+
+[build]
+command = "pnpm install && pnpm build"
