@@ -4,8 +4,8 @@
   "private": true,
   "main": "index.js",
   "files": [
-    "base.json",
-    "cloudflare.json",
+    "tsconfig/base.json",
+    "tsconfig/cloudflare.json",
     "vite.config.ts"
   ],
   "devDependencies": {
