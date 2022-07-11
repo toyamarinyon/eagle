@@ -16,6 +16,7 @@ export async function buildEagle({
     entryPoints: ["src/index.ts"],
     format: "esm",
     bundle: true,
+    minify: true,
     outfile: "dist/index.mjs",
   });
 }
