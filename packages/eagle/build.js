@@ -8,11 +8,32 @@ const external = [
   ...Object.keys(pkg.peerDependencies || {}),
 ];
 
-const entryPoint = join("index.ts");
-const outfile = join("dist", "index.js");
+const base = {
+  sourcemap: true,
+  platform: "node",
+  bundle: true,
+  format: "cjs",
+  minify: true,
+  external,
+};
+
+// build cli
 build({
-  entryPoints: [entryPoint],
-  outfile,
+  ...base,
+  entryPoints: [join("eagle.ts")],
+  outfile: join("dist", "eagle.js"),
+  sourcemap: true,
+  platform: "node",
+  bundle: true,
+  format: "cjs",
+  external,
+});
+
+// build lib
+build({
+  ...base,
+  entryPoints: [join('runtime', "index.ts")],
+  outfile: join("dist", "index.js"),
   sourcemap: true,
   platform: "node",
   bundle: true,

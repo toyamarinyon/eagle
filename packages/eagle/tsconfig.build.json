@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["./runtime/index.ts"],
+  "compilerOptions": {
+    "types": ["node"],
+    "outDir": "./dist",
+    "emitDeclarationOnly": true,
+    "isolatedModules": false,
+    "declaration": true,
+    // helps local development, could be dropped out of the NPM package though
+    "declarationMap": true
+  }
+}

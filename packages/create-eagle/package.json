@@ -6,12 +6,15 @@
   "bin": {
     "create-eagle": "dist/index.js"
   },
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "dependencies": {
-    "@toyamarinyon/eagle": "workspace:^0.1.0"
+    "@toyamarinyon/eagle": "workspace:*"
   },
   "devDependencies": {
     "esbuild": "^0.14.48"

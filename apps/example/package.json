@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "start": "wrangler dev",
-    "build": "node ../../packages/eagle/dist/index.js build"
+    "build": "node ../../packages/eagle/dist/eagle.js build"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.0",
-    "@toyamarinyon/eagle": "workspace:^0.1.0",
+    "@toyamarinyon/eagle": "workspace:*",
     "wrangler": "^2.0.16"
   }
 }
