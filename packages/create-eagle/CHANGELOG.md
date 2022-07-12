@@ -1,5 +1,11 @@
 # create-eagle
 
+## 0.1.2
+
+### Patch Changes
+
+- [`5c3e901`](https://github.com/toyamarinyon/eagle/commit/5c3e901b0fe86496b7e6912a91ccb168c6a62298) Thanks [@toyamarinyon](https://github.com/toyamarinyon)! - build
+
 ## 0.1.1
 
 ### Patch Changes
