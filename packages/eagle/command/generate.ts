@@ -9,7 +9,7 @@ type GenerateOption = {
 };
 export function generateRuntime({ pagesDir, packageDir }: GenerateOption) {
   const runtime = `
-  import { handler, Page } from "${join(packageDir, "runtime")}";
+  import { handler, Page } from "${join(packageDir)}";
   ${generateRouter(pagesDir)}
   export async function eagleHandler(request: Request) {
     return await handler(request, routes);
