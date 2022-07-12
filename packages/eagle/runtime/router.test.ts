@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { pathnameToFilePath, router } from "./router";
+import { NotFoundError, pathnameToFilePath, router } from "./router";
 
 describe("pathnameTofFlePath", () => {
   test("/ to index", () => {
@@ -59,6 +59,6 @@ describe("router", () => {
       new Request("http://localhost:8787/notfound-page"),
       routes
     );
-    expect(routing).rejects.toThrowError();
+    expect(routing).rejects.toThrowError(NotFoundError);
   });
 });
