@@ -4,5 +4,9 @@ import { router, Routes } from "./router";
 export async function handler(request: Request, routes: Routes) {
   const page = await router(request, routes);
   const result = await render(page);
-  return new Response(result);
+  return new Response(result, {
+    headers: {
+      "content-type": "text/html;charset=UTF-8",
+    },
+  });
 }
