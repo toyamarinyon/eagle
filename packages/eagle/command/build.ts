@@ -8,7 +8,7 @@ interface BuildOption {
 }
 export async function buildEagle({
   pagesDir = "src/pages",
-  packageDir = "eaglejs",
+  packageDir = "@eagle/eagle",
   runtimeDir = "node_modules/.eagle",
 }: BuildOption) {
   writeRuntime({ pagesDir, packageDir, runtimeDir });

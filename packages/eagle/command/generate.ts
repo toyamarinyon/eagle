@@ -25,7 +25,7 @@ function generateRouter(pagesDir: string) {
 
 export function writeRuntime({
   pagesDir = "src/pages",
-  packageDir = "eaglejs",
+  packageDir = "@eagle/eagle",
   runtimeDir = "node_modules/.eagle",
 }: Partial<GenerateOption>) {
   const runtime = generateRuntime({ pagesDir, packageDir, runtimeDir });
