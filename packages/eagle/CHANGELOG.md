@@ -1,5 +1,11 @@
 # eaglejs
 
+## 0.1.3
+
+### Patch Changes
+
+- [`26108ce`](https://github.com/toyamarinyon/eagle/commit/26108ce98ec7c3097d403d6677e4beb461e237e9) Thanks [@toyamarinyon](https://github.com/toyamarinyon)! - fix runtime path
+
 ## 0.1.2
 
 ### Patch Changes
