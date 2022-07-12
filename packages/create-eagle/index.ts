@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-import { init } from "eaglejs/command/init";
+import { init } from "@toyamarinyon/eagle/command/init";
 init();
