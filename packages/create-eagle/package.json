@@ -11,7 +11,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "eaglejs": "workspace:^0.1.0"
+    "@eagle/eagle": "workspace:^0.1.0"
   },
   "devDependencies": {
     "esbuild": "^0.14.48"

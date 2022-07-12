@@ -18,11 +18,11 @@ importers:
   apps/example:
     specifiers:
       '@cloudflare/workers-types': ^3.14.0
-      eaglejs: workspace:^0.1.0
+      '@eagle/eagle': workspace:^0.1.0
       wrangler: ^2.0.16
     devDependencies:
       '@cloudflare/workers-types': 3.14.0
-      eaglejs: link:../../packages/eagle
+      '@eagle/eagle': link:../../packages/eagle
       wrangler: 2.0.16
 
   packages/config:
@@ -37,10 +37,10 @@ importers:
 
   packages/create-eagle:
     specifiers:
-      eaglejs: workspace:^0.1.0
+      '@eagle/eagle': workspace:^0.1.0
       esbuild: ^0.14.48
     dependencies:
-      eaglejs: link:../eagle
+      '@eagle/eagle': link:../eagle
     devDependencies:
       esbuild: 0.14.48
 
