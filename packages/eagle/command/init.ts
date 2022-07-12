@@ -43,7 +43,7 @@ return 'Hello World';
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   // install dependencies
-  const devDependencies = ["@cloudflare/workers-types", "wrangler", "@toyamarinyon/eagle"];
+  const devDependencies = ["@cloudflare/workers-types", "wrangler", "@toyamarinyon/eagle", "typescript"];
   sync("pnpm", ["install", "--save-dev", ...devDependencies], {
     stdio: "inherit",
   });
