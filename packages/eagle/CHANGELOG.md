@@ -1,5 +1,11 @@
 # eaglejs
 
+## 0.1.2
+
+### Patch Changes
+
+- [`ac03f83`](https://github.com/toyamarinyon/eagle/commit/ac03f83da40842ba7ce0f3181392b22f5eaa2569) Thanks [@toyamarinyon](https://github.com/toyamarinyon)! - fix package name
+
 ## 0.1.1
 
 ### Patch Changes
