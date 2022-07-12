@@ -1,5 +1,11 @@
 # eaglejs
 
+## 0.1.4
+
+### Patch Changes
+
+- [#7](https://github.com/toyamarinyon/eagle/pull/7) [`257f22f`](https://github.com/toyamarinyon/eagle/commit/257f22f32e682f939bcd70c75e3c588be0433abe) Thanks [@toyamarinyon](https://github.com/toyamarinyon)! - Update redering process
+
 ## 0.1.3
 
 ### Patch Changes
