@@ -14,7 +14,8 @@
     "build": "run-p build:*",
     "build:esbuild": "node build.js",
     "build:type": "tsc --project tsconfig.build.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "keywords": [],
   "devDependencies": {
