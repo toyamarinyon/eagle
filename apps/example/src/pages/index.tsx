@@ -1,3 +1,7 @@
+function AnotherComponent() {
+  return <h1>Hello!</h1>
+}
+
 export default function HelloWorld() {
-  return <div>Hello! Satoshi!</div>;
+  return <div><AnotherComponent />Hello! Satoshi!</div>;
 }
