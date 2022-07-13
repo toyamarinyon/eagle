@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 export interface Page {
-  default: () => Promise<string>;
+  default: () => Promise<ReactElement>;
 }

@@ -18,6 +18,14 @@ export async function handler(request: Request, routes: Routes) {
           "content-type": "text/html;charset=UTF-8",
         },
       });
+    } else {
+      console.log(error)
+      return new Response(JSON.stringify(error), {
+        status: 500,
+        headers: {
+          "content-type": "application/json;charset=UTF-8",
+        },
+      });
     }
   }
 }

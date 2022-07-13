@@ -34,3 +34,13 @@ export function writeRuntime({
   }
   writeFileSync(join(runtimeDir, "index.ts"), runtime);
 }
+
+export function writeShim({
+  runtimeDir = "node_modules/.eagle",
+}: Partial<GenerateOption>) {
+  const shim = `
+import * as React from "react";
+export { React };`;
+
+  writeFileSync(join(runtimeDir, "reactShim.ts"), shim);
+}

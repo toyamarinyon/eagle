@@ -1,5 +1,6 @@
 import { build } from "esbuild";
-import { writeRuntime } from "./generate";
+import { join } from "path";
+import { writeRuntime, writeShim } from "./generate";
 
 interface BuildOption {
   pagesDir?: string;
@@ -12,11 +13,14 @@ export async function buildEagle({
   runtimeDir = "node_modules/.eagle",
 }: BuildOption) {
   writeRuntime({ pagesDir, packageDir, runtimeDir });
+  writeShim({ runtimeDir });
   await build({
     entryPoints: ["src/index.ts"],
     format: "esm",
     bundle: true,
     minify: true,
+    inject: [join(runtimeDir, "reactShim.ts")],
+    loader: { ".js": "jsx" },
     outfile: "dist/index.mjs",
   });
 }
