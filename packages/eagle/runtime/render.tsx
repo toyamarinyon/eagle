@@ -1,9 +1,25 @@
 import { Page } from "./page";
 import { renderToString } from "react-dom/server";
+import * as React from "react";
+
+function Document({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
 
 export async function render(page: Page) {
-  const string =  renderToString(await page.default());
-  return string
+  const pageElement = await page.default();
+  const string = renderToString(<Document>{pageElement}</Document>);
+  return string;
   // let controller = new AbortController();
   // let didError = false;
   // try {
