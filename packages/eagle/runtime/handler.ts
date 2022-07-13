@@ -1,10 +1,12 @@
-import { render } from "./render";
+import { renderStream } from "./render";
 import { NotFoundError, router, Routes } from "./router";
 
 export async function handler(request: Request, routes: Routes) {
+  const page = await router(request, routes);
+
   try {
     const page = await router(request, routes);
-    const result = await render(page);
+    const result = await renderStream(page);
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",
@@ -19,7 +21,7 @@ export async function handler(request: Request, routes: Routes) {
         },
       });
     } else {
-      console.log(error)
+      console.log(error);
       return new Response(JSON.stringify(error), {
         status: 500,
         headers: {
