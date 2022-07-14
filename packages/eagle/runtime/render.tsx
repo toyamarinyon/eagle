@@ -47,8 +47,8 @@ export async function renderStream(page: Page) {
   }
 }
 
-export async function render(page: Page) {
-  const pageElement = await page.default();
-  const string = renderToString(<Document>{pageElement}</Document>);
+export function render(page: Page) {
+  const Component = page.default;
+  const string = renderToString(<Document><Component /></Document>);
   return string;
 }

@@ -37,6 +37,6 @@ build({
   sourcemap: true,
   platform: "node",
   bundle: true,
-  format: "cjs",
+  format: "esm",
   external,
 });

@@ -18,7 +18,7 @@ export async function buildEagle({
     entryPoints: ["src/index.ts"],
     format: "esm",
     bundle: true,
-    minify: true,
+    minify: process.env.NODE_ENV === "production",
     inject: [join(runtimeDir, "reactShim.ts")],
     loader: { ".js": "jsx" },
     outfile: "dist/index.mjs",

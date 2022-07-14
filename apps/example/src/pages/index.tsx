@@ -1,7 +1,24 @@
+import { useState } from "react";
+
 function AnotherComponent() {
-  return <h1>Hello!</h1>
+  return <h1>Hello!</h1>;
 }
 
 export default function HelloWorld() {
-  return <div><AnotherComponent />Hello! Satoshi!</div>;
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <AnotherComponent />
+      Hello! Satoshi!
+      <button
+        onClick={() => {
+          console.log("hello");
+          // setCount(count + 1);
+        }}
+      >
+        click
+      </button>
+      {/* <p>count: {count}</p> */}
+    </div>
+  );
 }

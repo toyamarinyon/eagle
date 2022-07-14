@@ -1,12 +1,10 @@
-import { renderStream } from "./render";
+import { render, renderStream } from "./render";
 import { NotFoundError, router, Routes } from "./router";
 
 export async function handler(request: Request, routes: Routes) {
-  const page = await router(request, routes);
-
   try {
     const page = await router(request, routes);
-    const result = await renderStream(page);
+    const result = render(page);
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",
