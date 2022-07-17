@@ -1,10 +1,18 @@
 import { render, renderStream } from "./render";
-import { NotFoundError, router, Routes } from "./router";
+import { HydrateRoutes, NotFoundError, router, Routes } from "./router";
 
-export async function handler(request: Request, routes: Routes) {
+export async function handler(
+  request: Request,
+  routes: Routes,
+  hydrateRoutes: HydrateRoutes
+) {
   try {
-    const page = await router(request, routes);
-    const result = render(page);
+    const { page, hydrateScript } = await router(
+      request,
+      routes,
+      hydrateRoutes
+    );
+    const result = render(page, hydrateScript);
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",

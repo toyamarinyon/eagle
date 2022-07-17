@@ -7,7 +7,7 @@ import { writeRuntime } from "./generate";
 
 const cwd = process.cwd();
 
-export function init() {
+export async function init() {
   // Create a pages directory
   const pageDirectory = path.join(cwd, "src", "pages");
   if (!fs.existsSync(pageDirectory)) {
@@ -68,7 +68,7 @@ return 'Hello World';
     )
   );
 
-  writeRuntime({});
+  await writeRuntime({});
 
   console.log("Eagle init complete!");
   const hint = `

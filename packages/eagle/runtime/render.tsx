@@ -49,7 +49,7 @@ export async function renderStream(page: Page) {
   }
 }
 
-export function render(page: Page) {
+export function render(page: Page, hydrateScript: string) {
   const Component = page.default;
   const html = (
     <Document>
@@ -61,36 +61,7 @@ export function render(page: Page) {
     "{{SCRIPT_PLACEHOLDER}}",
     `
 <script type="module">
-// node_modules/.eagle/reactShim.ts
-import * as React from "https://cdn.skypack.dev/react";
-
-// node_modules/.eagle/client.tsx
-import { hydrate } from "https://cdn.skypack.dev/react-dom";
-
-// src/pages/index.tsx
-import { useState } from "https://cdn.skypack.dev/react";
-function AnotherComponent() {
-  return /* @__PURE__ */ React.createElement("h1", null, "Hello!");
-}
-function HelloWorld(props2) {
-  const [count, setCount] = useState(0);
-  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(AnotherComponent, null), props2.message, "! Satoshi!", /* @__PURE__ */ React.createElement("button", {
-    onClick: () => {
-      console.log("hello");
-      setCount(count + 1);
-    }
-  }, "click"), /* @__PURE__ */ React.createElement("p", null, "count: ", count));
-}
-
-// node_modules/.eagle/client.tsx
-function renderPage(props2) {
-  return hydrate(/* @__PURE__ */ React.createElement(HelloWorld, {
-    ...props2
-  }), document.getElementById("eagle-root"));
-}
-var props = { message: '--------------' };
-renderPage(props);
-
+${hydrateScript}
 </script>`
   );
   return clientCode;
