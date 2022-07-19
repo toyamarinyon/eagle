@@ -1,4 +1,4 @@
-import { render, renderStream } from "./render";
+import { render } from "./render";
 import { HydrateRoutes, NotFoundError, router, Routes } from "./router";
 
 export async function handler(
@@ -12,7 +12,8 @@ export async function handler(
       routes,
       hydrateRoutes
     );
-    const result = render(page, hydrateScript);
+    const props = page.PageProps?.() ?? {};
+    const result = render(page, props, hydrateScript);
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",

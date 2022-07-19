@@ -1,6 +1,6 @@
-import { Page } from "./page";
+import { PageFile } from "./page";
 
-type Route = () => Promise<Page>;
+type Route = () => Promise<PageFile>;
 export type Routes = { [key: string]: Route };
 export type HydrateRoutes = { [key: string]: string };
 

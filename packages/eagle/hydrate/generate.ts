@@ -30,7 +30,6 @@ export async function renderString(runtimeDir: string, path: string) {
     join("../../../", join(dir, base))
   );
   const tmpPath = join(runtimeDir, "tmp", path.replace(/\//g, "-"));
-  console.log(tmpPath);
   writeFileSync(tmpPath, tsCode);
   const buildResult = await build({
     entryPoints: [tmpPath],

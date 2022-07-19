@@ -24,51 +24,63 @@ describe("router", () => {
     ["subdir/hello"]: async () => ({ default: () => <div>subdir hello</div> }),
   };
 
+  const hydrateRoutes = {
+    ["index"]: "function hydrate(){}",
+    ["hello"]: "function hydrate(){}",
+    ["subdir/index"]: "function hydrate(){}",
+    ["subdir/hello"]: "function hydrate(){}",
+  };
+
   test("return matching page", async () => {
-    const indexRoute1 = await router(
+    const { page: indexPage } = await router(
       new Request("http://localhost:8787"),
-      routes
+      routes,
+      hydrateRoutes
     );
-    expect(indexRoute1.default()).toMatchInlineSnapshot(`
+    expect(indexPage.default({})).toMatchInlineSnapshot(`
       <div>
         index
       </div>
     `);
-    const indexRoute2 = await router(
+    const { page: indexPage2 } = await router(
       new Request("http://localhost:8787/"),
-      routes
+      routes,
+      hydrateRoutes
     );
-    expect(indexRoute2.default()).toMatchInlineSnapshot(`
+    expect(indexPage2.default({})).toMatchInlineSnapshot(`
       <div>
         index
       </div>
     `);
 
-    const helloRoute = await router(
+    const { page: helloPage } = await router(
       new Request("http://localhost:8787/hello"),
-      routes
+      routes,
+      hydrateRoutes
     );
-    expect(helloRoute.default()).toMatchInlineSnapshot(`
+    expect(helloPage.default({})).toMatchInlineSnapshot(`
       <div>
         hello
       </div>
     `);
 
-    const subdirIndexRoute = await router(
+    const { page: subdirIndexPage } = await router(
       new Request("http://localhost:8787/subdir/"),
-      routes
+      routes,
+      hydrateRoutes
     );
-    expect(subdirIndexRoute.default()).toMatchInlineSnapshot(`
+    expect(subdirIndexPage.default({})).toMatchInlineSnapshot(`
       <div>
         subdir index
       </div>
     `);
 
-    const subdirHelloRoute = await router(
+    const { page: subdirHelloPage } = await router(
       new Request("http://localhost:8787/subdir/hello"),
-      routes
+      routes,
+      hydrateRoutes
     );
-    expect(subdirHelloRoute.default()).toMatchInlineSnapshot(`
+    expect(subdirHelloPage.default({})).toMatchInlineSnapshot(`
       <div>
         subdir hello
       </div>
@@ -77,7 +89,8 @@ describe("router", () => {
   test("throw an error if there isn't matching routing for pathname", async () => {
     const routing = router(
       new Request("http://localhost:8787/notfound-page"),
-      routes
+      routes,
+      hydrateRoutes
     );
     expect(routing).rejects.toThrowError(NotFoundError);
   });
