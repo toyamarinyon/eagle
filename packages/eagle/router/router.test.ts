@@ -22,8 +22,8 @@ test("file list to router", () => {
   expect(router).toMatchInlineSnapshot(`
     "
     export const routes = {
-      [\\"directory/hello\\"]: async () => await import(\\"../../src/pages/directory/hello\\") as unknown as Page,
-      [\\"index\\"]: async () => await import(\\"../../src/pages/index\\") as unknown as Page,
+      [\\"directory/hello\\"]: async () => await import(\\"../../src/pages/directory/hello\\") as unknown as PageFile,
+      [\\"index\\"]: async () => await import(\\"../../src/pages/index\\") as unknown as PageFile,
     }
       "
   `);

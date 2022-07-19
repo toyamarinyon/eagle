@@ -15,7 +15,7 @@ export async function generateRuntime({
 }: GenerateOption) {
   const router = await generateRouter(pagesDir, runtimeDir);
   const runtime = `
-  import { handler, Page } from "${join(packageDir)}";
+  import { handler, PageFile } from "${join(packageDir)}";
   ${router}
   export async function eagleHandler(request: Request) {
     return await handler(request, routes, hydrateRoutes);
@@ -35,7 +35,6 @@ export async function writeRuntime({
   packageDir = "@toyamarinyon/eagle",
   runtimeDir = "node_modules/.eagle",
 }: Partial<GenerateOption>) {
-  const runtime = await generateRuntime({ pagesDir, packageDir, runtimeDir });
   if (!existsSync(runtimeDir)) {
     mkdirSync(runtimeDir);
   }
@@ -43,6 +42,8 @@ export async function writeRuntime({
   if (!existsSync(runtimeTmpDirectory)) {
     mkdirSync(runtimeTmpDirectory);
   }
+  writeShim({ packageDir });
+  const runtime = await generateRuntime({ pagesDir, packageDir, runtimeDir });
   writeFileSync(join(runtimeDir, "index.ts"), runtime);
 }
 

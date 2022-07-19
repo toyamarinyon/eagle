@@ -25,7 +25,7 @@ export function getPageFileList(
   return arrayOfFiles;
 }
 
-const routeTemplate = `["{key}"]: async () => await import("{path}") as unknown as Page,`;
+const routeTemplate = `["{key}"]: async () => await import("{path}") as unknown as PageFile,`;
 
 export function addRoute(filePath: string) {
   const ext = extname(filePath);
