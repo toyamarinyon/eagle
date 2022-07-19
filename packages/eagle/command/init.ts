@@ -7,7 +7,7 @@ import { writeRuntime } from "./generate";
 
 const cwd = process.cwd();
 
-export function init() {
+export async function init() {
   // Create a pages directory
   const pageDirectory = path.join(cwd, "src", "pages");
   if (!fs.existsSync(pageDirectory)) {
@@ -43,7 +43,18 @@ return 'Hello World';
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   // install dependencies
-  const devDependencies = ["@cloudflare/workers-types", "wrangler", "@toyamarinyon/eagle", "typescript"];
+  const dependencies = ["react"];
+  sync("pnpm", ["install", ...dependencies], {
+    stdio: "inherit",
+  });
+
+  const devDependencies = [
+    "@cloudflare/workers-types",
+    "wrangler",
+    "@toyamarinyon/eagle",
+    "typescript",
+    "types/react"
+  ];
   sync("pnpm", ["install", "--save-dev", ...devDependencies], {
     stdio: "inherit",
   });
@@ -57,13 +68,24 @@ return 'Hello World';
     )
   );
 
-  writeRuntime({});
+  await writeRuntime({});
 
   console.log("Eagle init complete!");
   const hint = `
 You can now start using Eagle in your code.
 
 import { eagleHandler } from ".eagle";
+
+export interface Env {
+  // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
+  // MY_KV_NAMESPACE: KVNamespace;
+  //
+  // Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
+  // MY_DURABLE_OBJECT: DurableObjectNamespace;
+  //
+  // Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
+  // MY_BUCKET: R2Bucket;
+}
 
 export default {
   async fetch(

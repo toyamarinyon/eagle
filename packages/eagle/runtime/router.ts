@@ -1,7 +1,8 @@
-import { Page } from "./page";
+import { PageFile } from "./page";
 
-type Route = () => Promise<Page>;
+type Route = () => Promise<PageFile>;
 export type Routes = { [key: string]: Route };
+export type HydrateRoutes = { [key: string]: string };
 
 export class NotFoundError extends Error {
   constructor(path: string) {
@@ -9,7 +10,11 @@ export class NotFoundError extends Error {
   }
 }
 
-export async function router(request: Request, routes: Routes) {
+export async function router(
+  request: Request,
+  routes: Routes,
+  hydrateRoutes: HydrateRoutes
+) {
   const url = new URL(request.url);
   const pathname = pathnameToFilePath(url.pathname);
   if (routes[pathname] == undefined) {
@@ -17,7 +22,8 @@ export async function router(request: Request, routes: Routes) {
   }
   const pageFile = routes[pathname];
   const page = await pageFile();
-  return page;
+  const hydrateScript = hydrateRoutes[pathname];
+  return { page, hydrateScript };
 }
 
 export function pathnameToFilePath(pathname: string): string {

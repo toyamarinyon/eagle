@@ -5,7 +5,8 @@
     "downlevelIteration": true,
     "strict": true,
     "target": "es2021",
-    "lib": ["dom", "es2021"]
+    "lib": ["dom", "es2021"],
+    "jsx": "preserve"
   },
   "exclude": ["node_modules"]
 }

@@ -1,10 +1,19 @@
 import { render } from "./render";
-import { NotFoundError, router, Routes } from "./router";
+import { HydrateRoutes, NotFoundError, router, Routes } from "./router";
 
-export async function handler(request: Request, routes: Routes) {
+export async function handler(
+  request: Request,
+  routes: Routes,
+  hydrateRoutes: HydrateRoutes
+) {
   try {
-    const page = await router(request, routes);
-    const result = await render(page);
+    const { page, hydrateScript } = await router(
+      request,
+      routes,
+      hydrateRoutes
+    );
+    const props = page.PageProps?.() ?? {};
+    const result = render(page, props, hydrateScript);
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",
@@ -16,6 +25,14 @@ export async function handler(request: Request, routes: Routes) {
         status: 404,
         headers: {
           "content-type": "text/html;charset=UTF-8",
+        },
+      });
+    } else {
+      console.log(error);
+      return new Response(JSON.stringify(error), {
+        status: 500,
+        headers: {
+          "content-type": "application/json;charset=UTF-8",
         },
       });
     }
