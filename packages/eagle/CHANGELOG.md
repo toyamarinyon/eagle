@@ -1,5 +1,11 @@
 # eaglejs
 
+## 0.1.5
+
+### Patch Changes
+
+- [`a9e3848`](https://github.com/toyamarinyon/eagle/commit/a9e384828c6896a971bc62a5c00af919a750c70e) Thanks [@toyamarinyon](https://github.com/toyamarinyon)! - React
+
 ## 0.1.4
 
 ### Patch Changes

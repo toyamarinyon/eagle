@@ -1,5 +1,0 @@
----
-"@toyamarinyon/eagle": patch
----
-
-React
