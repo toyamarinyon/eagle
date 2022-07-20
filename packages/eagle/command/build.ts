@@ -1,6 +1,6 @@
 import { build } from "esbuild";
 import { join } from "path";
-import { writeRuntime, writeShim } from "./generate";
+import { writeRuntime } from "./generate";
 
 // @ts-ignore
 import { skypackPlugin } from "../build/skypackPlugin.js";
