@@ -17,6 +17,13 @@ export async function generateRuntime({
   const runtime = `
   import { handler, PageFile } from "${join(packageDir)}";
   ${router}
+  export function eagle() {
+    return {
+      handleRequest: async (request: Request, env: Record<string, any>, ctx: ExecutionContext) => {
+        return await handler(request, routes, hydrateRoutes);
+      }
+    };
+  }
   export async function eagleHandler(request: Request) {
     return await handler(request, routes, hydrateRoutes);
   }
