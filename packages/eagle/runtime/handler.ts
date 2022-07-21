@@ -6,6 +6,15 @@ export class MethodNotAllowedError extends Error {
     super(`Method Not Allowed: path:${path}, method:${method}`);
   }
 }
+export type Handler = (req: Request) => Promise<Response>;
+
+export type EagleHandler = (
+  request: Request,
+  routes: Routes,
+  hydrateRoutes: HydrateRoutes
+) => Promise<Response>;
+
+export type EagleHandlerBuilder = (request: Request) => Promise<EagleHandler>;
 
 export async function handler(
   request: Request,

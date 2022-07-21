@@ -12,12 +12,19 @@ export interface Env {
 
 const app = eagle();
 
+// Sample middleware
+app.addMiddleware({
+  onRequest: async (request) => {
+    console.log(`request: ${request.url}`)
+  }
+})
+
 export default {
   async fetch(
     request: Request,
     env: Env,
     ctx: ExecutionContext
   ): Promise<Response> {
-    return app.handleRequest(request, env, ctx);
+    return app.handleRequest(request);
   },
 };
