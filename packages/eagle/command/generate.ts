@@ -15,14 +15,11 @@ export async function generateRuntime({
 }: GenerateOption) {
   const router = await generateRouter(pagesDir, runtimeDir);
   const runtime = `
-  import { handler, PageFile } from "${join(packageDir)}";
+  import { handler, PageFile, createEagle } from "${join(packageDir)}";
   ${router}
+
   export function eagle() {
-    return {
-      handleRequest: async (request: Request, env: Record<string, any>, ctx: ExecutionContext) => {
-        return await handler(request, routes, hydrateRoutes);
-      }
-    };
+    return createEagle(routes, hydrateRoutes)
   }
   export async function eagleHandler(request: Request) {
     return await handler(request, routes, hydrateRoutes);

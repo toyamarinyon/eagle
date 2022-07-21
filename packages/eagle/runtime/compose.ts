@@ -1,14 +1,10 @@
 import { Handler } from "./handler";
+import { Middleware } from "./middleware";
 
-interface MiddleWareBase {
-  onRequest: (request: Request) => Promise<Request | void>;
-  onResponse: (response: Response) => Promise<Response | void>;
-}
-export type Middleware = Partial<MiddleWareBase>;
-export const eagleCompose = (middlewareCollection: Middleware[]) => {
+export const compose = (middlewareCollection: Middleware[]) => {
   return async (req: Request, handler: Handler) => {
     const onRequestMiddleware = middlewareCollection.filter(
-      (middleware): middleware is Pick<MiddleWareBase, "onRequest"> =>
+      (middleware): middleware is Required<Pick<Middleware, "onRequest">> =>
         middleware.onRequest != null
     );
 
@@ -19,7 +15,7 @@ export const eagleCompose = (middlewareCollection: Middleware[]) => {
     let response = await handler(request);
 
     const onResponseMiddleware = middlewareCollection.filter(
-      (middleware): middleware is Pick<MiddleWareBase, "onResponse"> =>
+      (middleware): middleware is Required<Pick<Middleware, "onResponse">> =>
         middleware.onResponse != null
     );
 

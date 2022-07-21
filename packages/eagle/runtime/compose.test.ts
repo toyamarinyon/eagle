@@ -1,6 +1,7 @@
 import { expect, test, vi } from "vitest";
-import { eagleCompose, Middleware } from "./compose";
+import { compose } from "./compose";
 import { Handler } from "./handler";
+import { Middleware } from "./middleware";
 
 test("compose", async () => {
   const m1: Middleware = {
@@ -14,7 +15,7 @@ test("compose", async () => {
     .fn()
     .mockImplementation(() => new Response("Test Response"));
   const handler: Handler = handlerMock;
-  const composed = eagleCompose([m1]);
+  const composed = compose([m1]);
 
   const request = new Request("http://localhost:3000/");
   const response = await composed(request, handler);
