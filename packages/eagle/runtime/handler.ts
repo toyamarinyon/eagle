@@ -1,6 +1,12 @@
 import { render } from "./render";
 import { HydrateRoutes, NotFoundError, router, Routes } from "./router";
 
+export class MethodNotAllowedError extends Error {
+  constructor(path: string, method: string) {
+    super(`Method Not Allowed: path:${path}, method:${method}`);
+  }
+}
+
 export async function handler(
   request: Request,
   routes: Routes,
@@ -12,6 +18,17 @@ export async function handler(
       routes,
       hydrateRoutes
     );
+    if (request.method === "POST") {
+      if (page?.handler?.POST == null) {
+        const url = new URL(request.url);
+        throw new MethodNotAllowedError(url.pathname, request.method);
+      }
+      return page.handler.POST(request);
+    // Now, we can only handle GET and POST requests.
+    } else if (request.method !== "GET") {
+      const url = new URL(request.url);
+      throw new MethodNotAllowedError(url.pathname, request.method);
+    }
     const props = page.PageProps?.() ?? {};
     const result = render(page, props, hydrateScript);
     return new Response(result, {
@@ -23,6 +40,13 @@ export async function handler(
     if (error instanceof NotFoundError) {
       return new Response("Not Found", {
         status: 404,
+        headers: {
+          "content-type": "text/html;charset=UTF-8",
+        },
+      });
+    } else if (error instanceof MethodNotAllowedError) {
+      return new Response("Method Not Allowed", {
+        status: 405,
         headers: {
           "content-type": "text/html;charset=UTF-8",
         },

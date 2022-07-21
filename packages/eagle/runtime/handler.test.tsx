@@ -1,4 +1,4 @@
-import { test, expect } from "vitest";
+import { test, expect, describe } from "vitest";
 import { handler } from "./handler";
 import { Routes } from "./router";
 
@@ -8,16 +8,42 @@ const routes: Routes = {
     PageProps: () => ({
       message: "hello world",
     }),
+    handler: {
+      POST: async () => {
+        return new Response(
+          JSON.stringify({
+            message: "hello",
+          }),
+          {
+            headers: new Headers({
+              "Content-Type": "application/json",
+            }),
+          }
+        );
+      },
+    },
   }),
   ["hello"]: async () => ({ default: () => <div>hello</div> }),
   ["subdir/index"]: async () => ({ default: () => <div>subdir index</div> }),
   ["subdir/hello"]: async () => ({ default: () => <div>subdir hello</div> }),
+  ["signIn"]: async () => ({
+    default: () => <div>signIn</div>,
+    handler: {
+      POST: async (req) => {
+        const body = await req.formData();
+        console.log(body);
+        const email = body.get("email");
+        return new Response(`<div>Submit email is ${email}</div>`);
+      },
+    },
+  }),
 };
 const hydrateRoutes = {
   ["index"]: "function hydrate(){}",
   ["hello"]: "function hydrate(){}",
   ["subdir/index"]: "function hydrate(){}",
   ["subdir/hello"]: "function hydrate(){}",
+  ["signIn"]: "function hydrate(){}",
 };
 
 test("response html", async () => {
@@ -36,6 +62,40 @@ test("response html", async () => {
   );
   expect(response?.headers.get("content-type")).toBe("text/html;charset=UTF-8");
 });
+
+describe("POST", () => {
+  test("response POST handler", async () => {
+    const response = await handler(
+      new Request("http://localhost:8787", { method: "POST" }),
+      routes,
+      hydrateRoutes
+    );
+    expect(await response?.json()).toMatchInlineSnapshot(`
+    {
+      "message": "hello",
+    }
+  `);
+  });
+  test.only("with request", async () => {
+    const response = await handler(
+      new Request("http://localhost:8787/signIn", {
+        method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        }),
+        body: new URLSearchParams({
+          email: "toyamarinyon@gmail.com",
+        }).toString(),
+      }),
+      routes,
+      hydrateRoutes
+    );
+    expect(await response?.text()).toMatchInlineSnapshot(
+      '"<div>Submit email is toyamarinyon@gmail.com</div>"'
+    );
+  });
+});
+
 test("response 404", async () => {
   const response = await handler(
     new Request("http://localhost:8787/notfound"),
