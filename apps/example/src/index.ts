@@ -10,7 +10,7 @@ export interface Env {
   // MY_BUCKET: R2Bucket;
 }
 
-const app = eagle();
+export const app = eagle();
 
 // Sample middleware
 app.addMiddleware({

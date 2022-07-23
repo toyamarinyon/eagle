@@ -1,7 +1,10 @@
 import type { PageHandler } from "@toyamarinyon/eagle";
+import { app } from "..";
 
 export const handler: PageHandler = {
   POST: async (_) => {
+    const auth = getAuth(app)
+    await signIn(auth)
     return new Response(null, {
       status: 303,
       headers: {

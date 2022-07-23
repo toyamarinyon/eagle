@@ -9,6 +9,10 @@ interface Eagle {
   addMiddleware: (middleware: Middleware) => void;
   handleRequest: (request: Request) => Promise<Response>;
 }
+interface EagleConfig {
+  routes: Routes,
+  hydrateRoutes: HydrateRoutes
+}
 type EagleBuilder = (routes: Routes, hydrateRoutes: HydrateRoutes) => Eagle;
 
 export const createEagle: EagleBuilder = (routes, hydrateRoutes) => {
@@ -20,7 +24,7 @@ export const createEagle: EagleBuilder = (routes, hydrateRoutes) => {
       const composed = compose(middlewareList);
       return await composed(
         request,
-        async (request) => await handler(request, routes, hydrateRoutes)
+        async (request: Request) => await handler(request, routes, hydrateRoutes)
       );
     },
   };

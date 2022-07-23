@@ -14,8 +14,6 @@ export type EagleHandler = (
   hydrateRoutes: HydrateRoutes
 ) => Promise<Response>;
 
-export type EagleHandlerBuilder = (request: Request) => Promise<EagleHandler>;
-
 export async function handler(
   request: Request,
   routes: Routes,
