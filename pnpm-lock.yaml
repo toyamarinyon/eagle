@@ -67,6 +67,8 @@ importers:
       react-dom: ^18.2.0
       typescript: ^4.7.4
       vitest: ^0.17.1
+      webcrypt-session: ^0.5.1
+      zod: ^3.17.10
     dependencies:
       '@ltd/j-toml': 1.30.0
       commander: 9.3.0
@@ -74,6 +76,8 @@ importers:
       esbuild: 0.14.48
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      webcrypt-session: 0.5.1
+      zod: 3.17.10
     devDependencies:
       '@eagle/config': link:../config
       '@types/cross-spawn': 6.0.2
@@ -1210,6 +1214,11 @@ packages:
     resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}
     engines: {node: '>= 0.6'}
     dev: true
+
+  /cookie/0.5.0:
+    resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
+    engines: {node: '>= 0.6'}
+    dev: false
 
   /cron-schedule/3.0.6:
     resolution: {integrity: sha512-izfGgKyzzIyLaeb1EtZ3KbglkS6AKp9cv7LxmiyoOu+fXfol1tQDC0Cof0enVZGNtudTHW+3lfuW9ZkLQss4Wg==}
@@ -3679,6 +3688,13 @@ packages:
       defaults: 1.0.3
     dev: false
 
+  /webcrypt-session/0.5.1:
+    resolution: {integrity: sha512-76o/a76wbb7mvfqrh+Jr49/YnMaOLMugb7bwx84/UYkt78aE/No5ohGVG7RLHLJjeJouiXjMMW+tfFGKfulq+w==}
+    dependencies:
+      cookie: 0.5.0
+      zod: 3.17.10
+    dev: false
+
   /webidl-conversions/3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
     dev: false
@@ -3894,3 +3910,7 @@ packages:
       mustache: 4.2.0
       stack-trace: 0.0.10
     dev: true
+
+  /zod/3.17.10:
+    resolution: {integrity: sha512-IHXnQYQuOOOL/XgHhgl8YjNxBHi3xX0mVcHmqsvJgcxKkEczPshoWdxqyFwsARpf41E0v9U95WUROqsHHxt0UQ==}
+    dev: false

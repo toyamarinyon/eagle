@@ -1,3 +1,6 @@
+import { createWebCryptSession, WebCryptSession } from "webcrypt-session";
+import { z } from "zod";
+import { inferAnyZodObject } from "./inferAnyZodObject";
 import { render } from "./render";
 import { HydrateRoutes, NotFoundError, router, Routes } from "./router";
 
@@ -6,7 +9,10 @@ export class MethodNotAllowedError extends Error {
     super(`Method Not Allowed: path:${path}, method:${method}`);
   }
 }
-export type Handler = (req: Request) => Promise<Response>;
+export type Handler<T> = (
+  req: Request,
+  getSession: GetSession<T>
+) => Promise<Response>;
 
 export type EagleHandler = (
   request: Request,
@@ -16,10 +22,16 @@ export type EagleHandler = (
 
 export type EagleHandlerBuilder = (request: Request) => Promise<EagleHandler>;
 
-export async function handler(
+export type GetSession<T> = () => Omit<
+  WebCryptSession<inferAnyZodObject<T>>,
+  "toHeaderValue"
+>;
+
+export async function handler<T>(
   request: Request,
   routes: Routes,
-  hydrateRoutes: HydrateRoutes
+  hydrateRoutes: HydrateRoutes,
+  getSession: GetSession<T>
 ) {
   try {
     const { page, hydrateScript } = await router(
@@ -32,8 +44,8 @@ export async function handler(
         const url = new URL(request.url);
         throw new MethodNotAllowedError(url.pathname, request.method);
       }
-      return page.handler.POST(request);
-    // Now, we can only handle GET and POST requests.
+      return page.handler.POST(request, getSession);
+      // Now, we can only handle GET and POST requests.
     } else if (request.method !== "GET") {
       const url = new URL(request.url);
       throw new MethodNotAllowedError(url.pathname, request.method);

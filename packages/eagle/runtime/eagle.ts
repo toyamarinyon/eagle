@@ -1,11 +1,11 @@
 import { createWebCryptSession, WebCryptSession } from "webcrypt-session";
-import { AnyZodObject, z } from "zod";
+import { AnyZodObject } from "zod";
 import { compose } from "./compose";
 import { handler } from "./handler";
+import { inferAnyZodObject } from "./inferAnyZodObject";
 import { Middleware } from "./middleware";
 import { HydrateRoutes, Routes } from "./router";
 
-const middlewareList: Middleware[] = [];
 interface EagleOption<T = AnyZodObject> {
   session: {
     scheme: T;
@@ -13,18 +13,11 @@ interface EagleOption<T = AnyZodObject> {
   };
 }
 
-type EagleSession<T> = T extends AnyZodObject
-  ? z.infer<EagleOption<T>["session"]["scheme"]>
-  : never;
-
-type inferAnyZodObject<T> = T extends AnyZodObject ? T : never;
-
 export class Eagle<T> {
   private routes: Routes;
   private hydrateRoutes: HydrateRoutes;
   private middlewareList: Middleware[] = [];
 
-  session?: EagleSession<T>;
   webCryptSession?: WebCryptSession<inferAnyZodObject<T>>;
 
   constructor(
@@ -43,10 +36,16 @@ export class Eagle<T> {
     this.middlewareList.push(middleware);
   }
   async handleRequest(request: Request) {
-    const composed = compose(middlewareList);
+    const composed = compose(this.middlewareList);
     return await composed(
       request,
-      async (request) => await handler(request, this.routes, this.hydrateRoutes)
+      async (request: Request) =>
+        await handler(
+          request,
+          this.routes,
+          this.hydrateRoutes,
+          this.injectSession
+        )
     );
   }
 
@@ -56,10 +55,6 @@ export class Eagle<T> {
     }
     const { toHeaderValue, ...session } = this.webCryptSession;
     return session;
-  }
-
-  getSession(): EagleSession<T> {
-    return this.session as EagleSession<T>;
   }
 
   setupSession(sessionOption: EagleOption<inferAnyZodObject<T>>["session"]) {
@@ -82,12 +77,4 @@ export class Eagle<T> {
       },
     });
   }
-}
-
-export function createEagle<T>(
-  routes: Routes,
-  hydrateRoutes: HydrateRoutes,
-  option?: EagleOption<inferAnyZodObject<T>>
-) {
-  return new Eagle(routes, hydrateRoutes, option);
 }

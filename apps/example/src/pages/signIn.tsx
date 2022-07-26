@@ -1,7 +1,7 @@
 import type { PageHandler } from "@toyamarinyon/eagle";
 
 export const handler: PageHandler = {
-  POST: async (_) => {
+  POST: async (_, session) => {
     return new Response(null, {
       status: 303,
       headers: {

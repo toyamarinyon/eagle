@@ -1,6 +1,9 @@
+import { Eagle } from "./builder";
+import { Handler } from "./handler";
+
 type Page<T = Record<string, any>> = (props: T) => JSX.Element;
-export interface PageHandler {
-  POST?: (req: Request) => Promise<Response>;
+export interface PageHandler<T = any> {
+  POST?: Handler<T>;
 }
 
 export interface PageFile<T = Record<string, any>> {

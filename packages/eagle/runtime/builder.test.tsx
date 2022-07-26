@@ -1,5 +1,7 @@
 import { expect, test } from "vitest";
-import { createEagle } from "./builder";
+import { WebCryptSession } from "webcrypt-session";
+import { AnyZodObject, z } from "zod";
+import { createEagle, Eagle } from "./builder";
 import { Routes } from "./router";
 
 const routes: Routes = {
@@ -31,4 +33,35 @@ test("createEagle", async () => {
     function hydrate(){}
     </script></body></html>"
   `);
+});
+
+type inferAnyZodObject<T> = T extends AnyZodObject ? T : never;
+type inferEagleSession<T> = T extends Eagle<infer U extends AnyZodObject> ? T['webCryptSession'] : never;
+
+export type Handler<T> = (req: Request, session: inferEagleSession<T>) => Promise<Response>;
+
+interface PageHandler<T = any> {
+  POST?: Handler<T>;
+}
+
+
+test("createEagle with session", async () => {
+  const sessionScheme = z.object({
+    userId: z.string(),
+  });
+  const eagle = createEagle(routes, hydrateRoutes, {
+    session: {
+      scheme: sessionScheme,
+      secret: "hello",
+    },
+  });
+  type b = typeof eagle;
+  type a = inferEagleSession<b>;
+  const handler: Handler<typeof eagle> = async (req, session) =>{
+    return new Response("hello");
+
+  }
+  const response = await eagle.handleRequest(
+    new Request("http://localhost:8787")
+  );
 });
