@@ -12,7 +12,7 @@ export const compose = (middlewareCollection: Middleware[]) => {
     for await (const middleware of onRequestMiddleware) {
       request = (await middleware.onRequest(request)) || request;
     }
-    let response = await handler(request);
+    let response = await handler({ req: request });
 
     const onResponseMiddleware = middlewareCollection.filter(
       (middleware): middleware is Required<Pick<Middleware, "onResponse">> =>

@@ -6,7 +6,10 @@ export class MethodNotAllowedError extends Error {
     super(`Method Not Allowed: path:${path}, method:${method}`);
   }
 }
-export type Handler = (req: Request) => Promise<Response>;
+interface HandlerArgs {
+  req: Request;
+}
+export type Handler = (args: HandlerArgs) => Promise<Response>;
 
 export type EagleHandler = (
   request: Request,
@@ -32,8 +35,8 @@ export async function handler(
         const url = new URL(request.url);
         throw new MethodNotAllowedError(url.pathname, request.method);
       }
-      return page.handler.POST(request);
-    // Now, we can only handle GET and POST requests.
+      return page.handler.POST({ req: request });
+      // Now, we can only handle GET and POST requests.
     } else if (request.method !== "GET") {
       const url = new URL(request.url);
       throw new MethodNotAllowedError(url.pathname, request.method);

@@ -1,6 +1,8 @@
+import { Handler } from "./handler";
+
 type Page<T = Record<string, any>> = (props: T) => JSX.Element;
 export interface PageHandler {
-  POST?: (req: Request) => Promise<Response>;
+  POST?: Handler;
 }
 
 export interface PageFile<T = Record<string, any>> {

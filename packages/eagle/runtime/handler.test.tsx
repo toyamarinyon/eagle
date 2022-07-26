@@ -29,9 +29,8 @@ const routes: Routes = {
   ["signIn"]: async () => ({
     default: () => <div>signIn</div>,
     handler: {
-      POST: async (req) => {
+      POST: async ({ req }) => {
         const body = await req.formData();
-        console.log(body);
         const email = body.get("email");
         return new Response(`<div>Submit email is ${email}</div>`);
       },
@@ -76,7 +75,7 @@ describe("POST", () => {
     }
   `);
   });
-  test.only("with request", async () => {
+  test("with request", async () => {
     const response = await handler(
       new Request("http://localhost:8787/signIn", {
         method: "POST",
