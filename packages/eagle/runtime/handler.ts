@@ -6,10 +6,11 @@ export class MethodNotAllowedError extends Error {
     super(`Method Not Allowed: path:${path}, method:${method}`);
   }
 }
-interface HandlerArgs {
+interface HandlerArgs<Session> {
   req: Request;
+  session: Session
 }
-export type Handler = (args: HandlerArgs) => Promise<Response>;
+export type Handler<Session = any> = (args: HandlerArgs<Session>) => Promise<Response>;
 
 export async function handler(
   request: Request,
@@ -27,7 +28,7 @@ export async function handler(
         const url = new URL(request.url);
         throw new MethodNotAllowedError(url.pathname, request.method);
       }
-      return page.handler.POST({ req: request });
+      return page.handler.POST({ req: request, session: {} });
       // Now, we can only handle GET and POST requests.
     } else if (request.method !== "GET") {
       const url = new URL(request.url);
