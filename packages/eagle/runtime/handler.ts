@@ -11,14 +11,6 @@ interface HandlerArgs {
 }
 export type Handler = (args: HandlerArgs) => Promise<Response>;
 
-export type EagleHandler = (
-  request: Request,
-  routes: Routes,
-  hydrateRoutes: HydrateRoutes
-) => Promise<Response>;
-
-export type EagleHandlerBuilder = (request: Request) => Promise<EagleHandler>;
-
 export async function handler(
   request: Request,
   routes: Routes,
