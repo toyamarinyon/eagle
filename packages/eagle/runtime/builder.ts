@@ -20,8 +20,7 @@ export const createEagle: EagleBuilder = (routes, hydrateRoutes) => {
       const composed = compose(middlewareList);
       return await composed(
         request,
-        async ({ req }) =>
-          await handler(req, routes, hydrateRoutes)
+        async (req) => await handler(req, routes, hydrateRoutes, null)
       );
     },
   };

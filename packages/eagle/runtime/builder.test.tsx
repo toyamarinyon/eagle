@@ -20,7 +20,7 @@ const hydrateRoutes = {
   ["subdir/hello"]: "function hydrate(){}",
 };
 
-test("createEagle", async () => {
+test.skip("createEagle", async () => {
   const eagle = createEagle(routes, hydrateRoutes);
   const response = await eagle.handleRequest(
     new Request("http://localhost:8787")

@@ -1,7 +1,11 @@
 import { PageFile } from "./page";
 
-type Route = () => Promise<PageFile>;
-export type Routes = { [key: string]: Route };
+type Route<Props = Record<string, any>, Session = unknown> = () => Promise<
+  PageFile<Props, Session>
+>;
+export type Routes<Session = unknown> = {
+  [key: string]: Route<Record<string, any>, Session>;
+};
 export type HydrateRoutes = { [key: string]: string };
 
 export class NotFoundError extends Error {
@@ -10,7 +14,7 @@ export class NotFoundError extends Error {
   }
 }
 
-export async function router(
+export async function router<T = unknown>(
   request: Request,
   routes: Routes,
   hydrateRoutes: HydrateRoutes

@@ -1,12 +1,15 @@
 import { Handler } from "./handler";
 
 type Page<T = Record<string, any>> = (props: T) => JSX.Element;
-export interface PageHandler {
-  POST?: Handler;
+export interface PageHandler<Session = unknown> {
+  POST?: Handler<Session>;
 }
 
-export interface PageFile<T = Record<string, any>> {
-  default: Page<T>;
-  PageProps?: () => Record<string, any> | undefined | null;
-  handler?: PageHandler;
+export interface PageFile<
+  Props = Record<string, any>,
+  Session = unknown
+> {
+  default: Page<Props>;
+  PageProps?: () => Props | undefined | null;
+  handler?: PageHandler<Session>;
 }

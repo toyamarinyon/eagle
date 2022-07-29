@@ -1,6 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { compose } from "./compose";
-import { Handler } from "./handler";
+import { compose, ComposeHandler } from "./compose";
 import { Middleware } from "./middleware";
 
 test("compose", async () => {
@@ -14,7 +13,7 @@ test("compose", async () => {
   const handlerMock = vi
     .fn()
     .mockImplementation(() => new Response("Test Response"));
-  const handler: Handler = handlerMock;
+  const handler: ComposeHandler = handlerMock;
   const composed = compose([m1]);
 
   const request = new Request("http://localhost:3000/");
