@@ -6,7 +6,7 @@ import { inferAnyZodObject } from "./inferAnyZodObject";
 import { Middleware } from "./middleware";
 import { HydrateRoutes, Routes } from "./router";
 
-interface EagleOption<T = AnyZodObject> {
+export interface EagleOption<T = AnyZodObject> {
   session: {
     scheme: T;
     secret: string;
@@ -19,7 +19,7 @@ export type inferEagleSession<T> = T extends Eagle<
   ? SessionScheme
   : never;
 
-export class Eagle<Session> {
+export class Eagle<Session = unknown> {
   private routes: Routes<Session>;
   private hydrateRoutes: HydrateRoutes;
   private middlewareList: Middleware[] = [];
@@ -51,14 +51,6 @@ export class Eagle<Session> {
         this.webCryptSession
       );
     });
-  }
-
-  injectSession() {
-    if (this.webCryptSession == null) {
-      throw new Error();
-    }
-    const { toHeaderValue, ...session } = this.webCryptSession;
-    return session;
   }
 
   setupSession(

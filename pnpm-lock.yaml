@@ -22,8 +22,10 @@ importers:
       '@types/react': ^18.0.15
       react: ^18.2.0
       wrangler: ^2.0.18
+      zod: ^3.17.10
     dependencies:
       react: 18.2.0
+      zod: 3.17.10
     devDependencies:
       '@cloudflare/workers-types': 3.14.0
       '@toyamarinyon/eagle': link:../../packages/eagle
