@@ -61,7 +61,7 @@ export async function handler<Session>(
       throw new MethodNotAllowedError(url.pathname, request.method);
     }
     const props = page.PageProps?.() ?? {};
-    const result = render(page, props, hydrateScript);
+    const result = render(page, { props, hydrateScript });
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",
