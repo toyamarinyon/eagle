@@ -69,7 +69,7 @@ export function render<Props>(
     "{{SCRIPT_PLACEHOLDER}}",
     `
 <script type="module">
-${options.hydrateScript}
+${options.hydrateScript.replace("var props = {};", `var props = ${JSON.stringify(options.props)}`)}
 </script>`
   );
   return clientCode;

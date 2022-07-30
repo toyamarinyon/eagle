@@ -4,13 +4,13 @@ function AnotherComponent() {
   return <h1>Hello!</h1>;
 }
 
-export function PrepareProps() {
+export async function PageProps() {
   return {
     message: "hello!",
   };
 }
 
-export default function HelloWorld(props: ReturnType<typeof PrepareProps>) {
+export default function HelloWorld(props: Record<string, any>) {
   const [count, setCount] = useState(0);
   return (
     <div>
