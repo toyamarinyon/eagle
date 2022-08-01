@@ -1,4 +1,5 @@
 import { eagle } from ".eagle";
+import { z } from "zod";
 export interface Env {
   // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
   // MY_KV_NAMESPACE: KVNamespace;
@@ -10,14 +11,22 @@ export interface Env {
   // MY_BUCKET: R2Bucket;
 }
 
-const app = eagle();
+const sessionScheme = z.object({
+  userId: z.string(),
+});
+export const app = eagle({
+  session: {
+    scheme: sessionScheme,
+    secret: "IF4B#t69!WlX$uS22blaxDvzJJ%$vEh%",
+  },
+});
 
 // Sample middleware
 app.addMiddleware({
   onRequest: async (request) => {
-    console.log(`request: ${request.url}`)
-  }
-})
+    console.log(`request: ${request.url}`);
+  },
+});
 
 export default {
   async fetch(

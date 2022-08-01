@@ -1,3 +1,6 @@
+import { WebCryptSession } from "webcrypt-session";
+import { AnyZodObject, z } from "zod";
+import { inferAnyZodObject } from "./inferAnyZodObject";
 import { render } from "./render";
 import { HydrateRoutes, NotFoundError, router, Routes } from "./router";
 
@@ -6,20 +9,32 @@ export class MethodNotAllowedError extends Error {
     super(`Method Not Allowed: path:${path}, method:${method}`);
   }
 }
-export type Handler = (req: Request) => Promise<Response>;
 
-export type EagleHandler = (
-  request: Request,
-  routes: Routes,
-  hydrateRoutes: HydrateRoutes
+type inferHandlerArgs<SessionScheme = unknown> =
+  SessionScheme extends AnyZodObject
+    ? {
+        req: Request;
+        session: WebCryptSession<SessionScheme>;
+      }
+    : {
+        req: Request;
+      };
+
+export type Handler<SessionScheme = unknown> = (
+  args: inferHandlerArgs<SessionScheme>
 ) => Promise<Response>;
 
-export type EagleHandlerBuilder = (request: Request) => Promise<EagleHandler>;
+const zAny = z.any();
+type AnySession = z.infer<typeof zAny>;
 
-export async function handler(
+export async function handler<Session>(
   request: Request,
   routes: Routes,
-  hydrateRoutes: HydrateRoutes
+  hydrateRoutes: HydrateRoutes,
+  webCryptSession?:
+    | WebCryptSession<inferAnyZodObject<Session>>
+    | undefined
+    | null
 ) {
   try {
     const { page, hydrateScript } = await router(
@@ -32,14 +47,22 @@ export async function handler(
         const url = new URL(request.url);
         throw new MethodNotAllowedError(url.pathname, request.method);
       }
-      return page.handler.POST(request);
-    // Now, we can only handle GET and POST requests.
+      if (webCryptSession != null) {
+        return (page.handler.POST as Handler<AnySession>)({
+          req: request,
+          session: webCryptSession,
+        });
+      } else {
+        return page.handler.POST({ req: request });
+      }
+      // Now, we can only handle GET and POST requests.
     } else if (request.method !== "GET") {
       const url = new URL(request.url);
       throw new MethodNotAllowedError(url.pathname, request.method);
     }
-    const props = page.PageProps?.() ?? {};
-    const result = render(page, props, hydrateScript);
+    const pagePropsArgs = { req: request, session: webCryptSession };
+    const props = await page.pageProps?.(pagePropsArgs) ?? {};
+    const result = render(page, { props, hydrateScript });
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",

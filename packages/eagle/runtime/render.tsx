@@ -49,11 +49,19 @@ function Document({ children }: { children: React.ReactNode }) {
 //   }
 // }
 
-export function render<T>(page: PageFile<T>, props: T, hydrateScript: string) {
+interface RenderOption<Props> {
+  props: Props;
+  hydrateScript: string;
+}
+
+export function render<Props>(
+  page: PageFile<Props>,
+  options: RenderOption<Props>
+) {
   const Component = page.default;
   const html = (
     <Document>
-      <Component {...props} />
+      <Component {...options.props} />
     </Document>
   );
   const renderResult = renderToString(html);
@@ -61,7 +69,7 @@ export function render<T>(page: PageFile<T>, props: T, hydrateScript: string) {
     "{{SCRIPT_PLACEHOLDER}}",
     `
 <script type="module">
-${hydrateScript}
+${options.hydrateScript.replace("var props = {};", `var props = ${JSON.stringify(options.props)}`)}
 </script>`
   );
   return clientCode;

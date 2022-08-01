@@ -15,11 +15,11 @@ export async function generateRuntime({
 }: GenerateOption) {
   const router = await generateRouter(pagesDir, runtimeDir);
   const runtime = `
-  import { handler, PageFile, createEagle } from "${join(packageDir)}";
+  import { handler, PageFile, Eagle, EagleOption, inferAnyZodObject } from "${join(packageDir)}";
   ${router}
 
-  export function eagle() {
-    return createEagle(routes, hydrateRoutes)
+  export function eagle<T = unknown>(option?: EagleOption<inferAnyZodObject<T>>) {
+    return new Eagle(routes, hydrateRoutes, option);
   }
   export async function eagleHandler(request: Request) {
     return await handler(request, routes, hydrateRoutes);
