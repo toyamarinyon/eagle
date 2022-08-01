@@ -1,5 +1,11 @@
 # eagle-example
 
+## 1.1.0
+
+### Minor Changes
+
+- [#17](https://github.com/toyamarinyon/eagle/pull/17) [`6d5841d`](https://github.com/toyamarinyon/eagle/commit/6d5841d4b3765f54e7e2e692a2e3d9ed72bfbb5f) Thanks [@toyamarinyon](https://github.com/toyamarinyon)! - session
+
 ## 1.0.2
 
 ### Patch Changes

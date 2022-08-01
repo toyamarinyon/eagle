@@ -1,5 +1,12 @@
 # create-eagle
 
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [[`6d5841d`](https://github.com/toyamarinyon/eagle/commit/6d5841d4b3765f54e7e2e692a2e3d9ed72bfbb5f)]:
+  - @toyamarinyon/eagle@0.2.0
+
 ## 0.1.8
 
 ### Patch Changes
