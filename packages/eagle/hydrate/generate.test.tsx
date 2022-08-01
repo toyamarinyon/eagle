@@ -16,8 +16,11 @@ test("rendering hydrate script as string", async () => {
     import { hydrate } from \\"https://cdn.skypack.dev/react-dom\\";
 
     // hydrate/__stub__/src/pages/index.tsx
+    var test = \\"hello\\";
     function HelloWorld() {
-      return /* @__PURE__ */ React.createElement(\\"div\\", null, \\"hello\\");
+      const testMessage = \`
+      \${test}\`;
+      return /* @__PURE__ */ React.createElement(\\"div\\", null, testMessage);
     }
 
     // hydrate/__stub__/node_modules/runtime/tmp/src-pages-index.tsx
@@ -34,7 +37,7 @@ test("rendering hydrate script as string", async () => {
 
 test("create hydrate script router", async () => {
   const stubDir = join(__dirname, "__stub__");
-  const tmpRuntimeDir = join(stubDir, "node_modules","runtime");
+  const tmpRuntimeDir = join(stubDir, "node_modules", "runtime");
   const filePaths = getPageFileList("src/pages", [], stubDir);
   expect(filePaths).toMatchInlineSnapshot(`
     [

@@ -61,7 +61,7 @@ export async function handler<Session>(
       throw new MethodNotAllowedError(url.pathname, request.method);
     }
     const pagePropsArgs = { req: request, session: webCryptSession };
-    const props = await page.PageProps?.(pagePropsArgs) ?? {};
+    const props = await page.pageProps?.(pagePropsArgs) ?? {};
     const result = render(page, { props, hydrateScript });
     return new Response(result, {
       headers: {

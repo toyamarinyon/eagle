@@ -38,12 +38,12 @@ test("render react component", async () => {
 });
 
 test("render with prepare props", async () => {
-  const pageProps = () => ({
+  const pageProps = async () => ({
     message: "hello world",
   });
   const page: PageFile<{ message: string }> = {
     default: (props) => <div>{props?.message}</div>,
-    PageProps: pageProps,
+    pageProps,
   };
   expect(
     render(page, {

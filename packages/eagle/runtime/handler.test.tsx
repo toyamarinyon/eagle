@@ -7,7 +7,7 @@ import { Routes } from "./router";
 const routes: Routes = {
   ["index"]: async () => ({
     default: (props) => <div>{props.message}</div>,
-    PageProps: async () => ({
+    pageProps: async () => ({
       message: "hello world",
     }),
     handler: {
@@ -122,7 +122,7 @@ test("session", async () => {
   expect(webCryptSession.userId).toBe(1);
   const routesWithSession: Routes<typeof sessionScheme> = {
     ["index"]: async () => ({
-      PageProps: async ({ session }) => {
+      pageProps: async ({ session }) => {
         return {
           message: session.userId,
         };

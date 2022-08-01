@@ -1,6 +1,7 @@
 import { build } from "esbuild";
 import { writeFileSync, rmSync } from "fs";
 import { basename, dirname, extname, join } from "path";
+import { format } from "pretty-format";
 
 // @ts-ignore
 import { skypackPlugin } from "../build/skypackPlugin.js";
@@ -62,7 +63,10 @@ export async function createHydrateRouter(
   return `
   export const hydrateRoutes = {
   ${tmp
-    .map(([filePath, hydrateString]) => `["${filePath}"]: \`${hydrateString}\``)
+    .map(
+      ([filePath, hydrateString]) =>
+        `["${filePath}"]: \`${hydrateString.replace(/(`|\$)/g, "\\$1")}\``
+    )
     .join(",\n  ")}
   }`;
 }

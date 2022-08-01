@@ -1,3 +1,6 @@
+const test = "hello";
 export default function HelloWorld() {
-  return <div>hello</div>;
+  const testMessage = `
+  ${test}`;
+  return <div>{testMessage}</div>;
 }

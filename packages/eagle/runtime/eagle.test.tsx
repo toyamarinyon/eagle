@@ -6,7 +6,7 @@ import { Routes } from "./router";
 const routes: Routes<typeof sessionScheme> = {
   ["index"]: async () => ({
     default: (props) => <div>{props.message}</div>,
-    PageProps: async () => ({
+    pageProps: async () => ({
       message: "hello world",
     }),
     handler: {
@@ -70,7 +70,7 @@ test("without session", async () => {
   const routes2: Routes = {
     ["index"]: async () => ({
       default: (props) => <div>{props.message}</div>,
-      PageProps: async () => ({
+      pageProps: async () => ({
         message: "hello world",
       }),
       handler: {
