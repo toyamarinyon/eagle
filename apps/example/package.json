@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "wrangler dev",
-    "build": "node ../../packages/eagle/dist/eagle.js build"
+    "build": "node ../../packages/eagle/dist/eagle.js new-build"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.0",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "zod": "^3.17.10"
   }
 }

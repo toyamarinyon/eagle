@@ -1,7 +1,6 @@
 import { build } from "esbuild";
 import { writeFileSync, rmSync } from "fs";
 import { basename, dirname, extname, join } from "path";
-import { format } from "pretty-format";
 
 // @ts-ignore
 import { skypackPlugin } from "../build/skypackPlugin.js";

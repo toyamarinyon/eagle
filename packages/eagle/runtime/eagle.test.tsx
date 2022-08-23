@@ -48,9 +48,7 @@ test("createEagle", async () => {
   );
   expect(await response1.text()).toMatchInlineSnapshot(`
     "<html lang=\\"en\\"><head><meta charSet=\\"UTF-8\\"/><meta http-equiv=\\"X-UA-Compatible\\" content=\\"IE=edge\\"/><meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\"/><title>Document</title></head><body><div id=\\"eagle-root\\"><div>hello world</div></div>
-    <script type=\\"module\\">
-    function hydrate(){}
-    </script></body></html>"
+    <script type=\\"module\\"></script></body></html>"
   `);
 
   const response2 = await eagle.handleRequest(
@@ -89,9 +87,7 @@ test("without session", async () => {
   );
   expect(await response1.text()).toMatchInlineSnapshot(`
     "<html lang=\\"en\\"><head><meta charSet=\\"UTF-8\\"/><meta http-equiv=\\"X-UA-Compatible\\" content=\\"IE=edge\\"/><meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\"/><title>Document</title></head><body><div id=\\"eagle-root\\"><div>hello world</div></div>
-    <script type=\\"module\\">
-    function hydrate(){}
-    </script></body></html>"
+    <script type=\\"module\\"></script></body></html>"
   `);
 
   const response2 = await eagle.handleRequest(

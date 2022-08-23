@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { program } from "commander";
 import { init, buildEagle } from "./command";
+import { buildEagleNew } from "./new-build";
 
 program.name("eagle cli").description("CLI for Eagle").version("1.0.0");
 program
@@ -15,6 +16,13 @@ program
   .description("Build Eagle")
   .action(async () => {
     await buildEagle({});
+  });
+
+program
+  .command("new-build")
+  .description("Build Eagle")
+  .action(async () => {
+    await buildEagleNew();
   });
 
 program.parse();

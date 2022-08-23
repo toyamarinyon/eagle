@@ -1,25 +1,23 @@
 import { expect, test } from "vitest";
 import { createManifest } from "./manifest";
-import { join } from "path";
+import { join, relative } from "path";
 
 test("test", () => {
   const manifest = createManifest(
-    "src/pages",
-    join(__dirname, "../__tests__", "stub")
+    join("./__tests__", "stub", "src/pages"),
+    join("./__tests__", "stub", "dist")
   );
   expect(manifest).toMatchInlineSnapshot(`
-    [
-      "",
-      "title = 'eagle build manifest'",
-      "",
-      "[[pages]]",
-      "",
-      "path = 'src/pages/directory/hello.tsx'",
-      "",
-      "[[pages]]",
-      "",
-      "path = 'src/pages/index.tsx'",
-      "",
-    ]
+    {
+      "pages": [
+        {
+          "path": "__tests__/stub/src/pages/directory/hello.tsx",
+        },
+        {
+          "path": "__tests__/stub/src/pages/index.tsx",
+        },
+      ],
+      "title": "eagle build manifest",
+    }
   `);
 });

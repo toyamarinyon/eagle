@@ -51,7 +51,6 @@ function Document({ children }: { children: React.ReactNode }) {
 
 interface RenderOption<Props> {
   props: Props;
-  hydrateScript: string;
 }
 
 export function render<Props>(
@@ -68,9 +67,7 @@ export function render<Props>(
   const clientCode = renderResult.replace(
     "{{SCRIPT_PLACEHOLDER}}",
     `
-<script type="module">
-${options.hydrateScript.replace("var props = {};", `var props = ${JSON.stringify(options.props)}`)}
-</script>`
+<script type="module"></script>`
   );
   return clientCode;
 }

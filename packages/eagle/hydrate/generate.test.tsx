@@ -20,7 +20,7 @@ test("rendering hydrate script as string", async () => {
     function HelloWorld() {
       const testMessage = \`
       \${test}\`;
-      return /* @__PURE__ */ React.createElement(\\"div\\", null, testMessage);
+      return <div>{testMessage}</div>;
     }
 
     // hydrate/__stub__/node_modules/runtime/tmp/src-pages-index.tsx

@@ -30,18 +30,13 @@ type AnySession = z.infer<typeof zAny>;
 export async function handler<Session>(
   request: Request,
   routes: Routes,
-  hydrateRoutes: HydrateRoutes,
   webCryptSession?:
     | WebCryptSession<inferAnyZodObject<Session>>
     | undefined
     | null
 ) {
   try {
-    const { page, hydrateScript } = await router(
-      request,
-      routes,
-      hydrateRoutes
-    );
+    const { page } = await router(request, routes);
     if (request.method === "POST") {
       if (page?.handler?.POST == null) {
         const url = new URL(request.url);
@@ -61,8 +56,8 @@ export async function handler<Session>(
       throw new MethodNotAllowedError(url.pathname, request.method);
     }
     const pagePropsArgs = { req: request, session: webCryptSession };
-    const props = await page.pageProps?.(pagePropsArgs) ?? {};
-    const result = render(page, { props, hydrateScript });
+    const props = (await page.pageProps?.(pagePropsArgs)) ?? {};
+    const result = render(page, { props });
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",

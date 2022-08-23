@@ -1,4 +1,4 @@
-import { build } from "esbuild";
+import { build, transform } from "esbuild";
 import { writeFileSync, rmSync } from "fs";
 import { basename, dirname, extname, join } from "path";
 
@@ -21,32 +21,37 @@ renderPage(props)
 /**
  * Build hydrate code for the given page.
  * @param pagePath - path to the page to hydrate
- * @param runtimeDir
+ * @param distDir
  * @returns
  */
 export async function buildPageHydrationCode(
   pagePath: string,
-  runtimeDir: string
+  distDir: string
 ) {
-  const ext = extname(pagePath);
-  const base = basename(pagePath, ext);
-  const dir = dirname(pagePath);
-  const tsCode = hydrateCodeTemplate.replace(
-    "{path}",
-    join("../../../", join(dir, base))
-  );
-  const tmpPath = join(runtimeDir, "tmp", pagePath.replace(/\//g, "-"));
-  writeFileSync(tmpPath, tsCode);
-  const buildResult = await build({
-    entryPoints: [tmpPath],
+  const hydratePageString = createHydratingTypeScriptStringOnPage(pagePath);
+  const flatPagePath = pagePath.replace(/\//g, "-");
+  const hydrateTypeScriptPath = join(distDir, "tmp", flatPagePath);
+
+  writeFileSync(hydrateTypeScriptPath, hydratePageString);
+  await build({
+    entryPoints: [hydrateTypeScriptPath],
     jsx: "automatic",
     bundle: true,
     format: "iife",
     loader: { ".ts": "tsx" },
     target: "es2022",
-    write: false,
+    outfile: join(distDir, flatPagePath),
   });
-  rmSync(tmpPath);
+  rmSync(hydrateTypeScriptPath);
+}
 
-  return buildResult.outputFiles[0].text;
+export function createHydratingTypeScriptStringOnPage(pagePath: string) {
+  const ext = extname(pagePath);
+  const base = basename(pagePath, ext);
+  const dir = dirname(pagePath);
+  const hydratePageString = hydrateCodeTemplate.replace(
+    "{path}",
+    join("../../", join(dir, base))
+  );
+  return hydratePageString;
 }

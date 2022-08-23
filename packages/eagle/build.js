@@ -13,7 +13,7 @@ const base = {
   platform: "node",
   bundle: true,
   format: "cjs",
-  minify: true,
+  minify: false,
   external,
 };
 
@@ -31,12 +31,13 @@ build({
 
 // build lib
 build({
-  ...base,
-  entryPoints: [join('runtime', "index.ts")],
+  // ...base,
+  entryPoints: [join("runtime", "index.tsx")],
   outfile: join("dist", "index.js"),
-  sourcemap: true,
   platform: "node",
   bundle: true,
+  loader: { ".ts": "tsx" },
+  jsx: "automatic",
   format: "esm",
   external,
 });

@@ -21,18 +21,15 @@ export type inferEagleSession<T> = T extends Eagle<
 
 export class Eagle<Session = unknown> {
   private routes: Routes<Session>;
-  private hydrateRoutes: HydrateRoutes;
   private middlewareList: Middleware[] = [];
 
   webCryptSession?: WebCryptSession<inferAnyZodObject<Session>>;
 
   constructor(
     routes: Routes,
-    hydrateRoutes: HydrateRoutes,
     option?: EagleOption<inferAnyZodObject<Session>>
   ) {
     this.routes = routes;
-    this.hydrateRoutes = hydrateRoutes;
     if (option?.session != null) {
       this.setupSession(option.session);
     }
@@ -44,12 +41,7 @@ export class Eagle<Session = unknown> {
   async handleRequest(request: Request) {
     const composed = compose(this.middlewareList);
     return await composed(request, async (request: Request) => {
-      return await handler(
-        request,
-        this.routes,
-        this.hydrateRoutes,
-        this.webCryptSession
-      );
+      return await handler(request, this.routes, this.webCryptSession);
     });
   }
 
