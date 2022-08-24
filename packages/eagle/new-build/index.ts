@@ -76,5 +76,6 @@ export async function buildEagleNew(option?: Partial<BuildOption>) {
     loader: { ".ts": "tsx", ".js": "jsx" },
     jsx: "automatic",
     outfile: "dist/index.mjs",
+    external: ["__STATIC_CONTENT_MANIFEST"],
   });
 }

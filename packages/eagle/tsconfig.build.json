@@ -1,8 +1,8 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["./runtime/index.ts"],
+  "include": ["./runtime/index.ts", "placeholder.d.ts"],
   "compilerOptions": {
-    "types": ["node"],
+    "types": ["@cloudflare/workers-types"],
     "outDir": "./dist",
     "emitDeclarationOnly": true,
     "isolatedModules": false,

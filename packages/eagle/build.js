@@ -6,6 +6,7 @@ const pkg = require(path.resolve("./package.json"));
 const external = [
   ...Object.keys(pkg.dependencies || {}),
   ...Object.keys(pkg.peerDependencies || {}),
+  '__STATIC_CONTENT_MANIFEST'
 ];
 
 const base = {
@@ -32,7 +33,7 @@ build({
 // build lib
 build({
   // ...base,
-  entryPoints: [join("runtime", "index.tsx")],
+  entryPoints: [join("runtime", "index.ts")],
   outfile: join("dist", "index.js"),
   platform: "node",
   bundle: true,
