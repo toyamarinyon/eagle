@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { createManifest } from "./manifest";
-import { join, relative } from "path";
+import { join } from "path";
 
 test("test", () => {
   const manifest = createManifest(
@@ -11,10 +11,10 @@ test("test", () => {
     {
       "pages": [
         {
-          "path": "__tests__/stub/src/pages/directory/hello.tsx",
+          "path": "directory/hello.tsx",
         },
         {
-          "path": "__tests__/stub/src/pages/index.tsx",
+          "path": "index.tsx",
         },
       ],
       "title": "eagle build manifest",
