@@ -2,7 +2,7 @@ import { WebCryptSession } from "webcrypt-session";
 import { AnyZodObject, z } from "zod";
 import { inferAnyZodObject } from "./inferAnyZodObject";
 import { render } from "./render";
-import { HydrateRoutes, NotFoundError, router, Routes } from "./router";
+import { NotFoundError, router, Routes } from "./router";
 
 export class MethodNotAllowedError extends Error {
   constructor(path: string, method: string) {
@@ -57,7 +57,7 @@ export async function handler<Session>(
     }
     const pagePropsArgs = { req: request, session: webCryptSession };
     const props = (await page.pageProps?.(pagePropsArgs)) ?? {};
-    const result = render(page, { props });
+    const result = render(page, request, { props });
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",

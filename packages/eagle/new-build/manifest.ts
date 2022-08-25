@@ -12,7 +12,6 @@ export function getPageFilePaths(pagesDir: string, subDir = "") {
   files.forEach(function (file) {
     const filePath = join(pagesDir, subDir, file);
     if (statSync(filePath).isDirectory()) {
-      console.log(file);
       pageFilePaths = getPageFilePaths(pagesDir, file);
     } else {
       pageFilePaths.push(join(subDir, file));

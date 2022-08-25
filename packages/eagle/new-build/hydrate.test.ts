@@ -3,7 +3,7 @@ import { test, expect } from "vitest";
 import { createHydratingTypeScriptStringOnPage } from "./hydrate";
 
 test("rendering hydrate script as string", async () => {
-  const pagePath = join("src", "pages", "index.tsx");
+  const pagePath = join("index.tsx");
   const code = await createHydratingTypeScriptStringOnPage(pagePath);
   expect(code).toMatchInlineSnapshot(`
     "

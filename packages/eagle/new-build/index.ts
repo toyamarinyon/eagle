@@ -42,7 +42,7 @@ export async function buildEagleNew(option?: Partial<BuildOption>) {
         entryPoints: [hydratingTypeScriptFilePath],
         jsx: "automatic",
         bundle: true,
-        format: "iife",
+        format: "esm",
         loader: { ".ts": "tsx" },
         target: "es2022",
         outdir: join(buildOption.distDir, "public"),

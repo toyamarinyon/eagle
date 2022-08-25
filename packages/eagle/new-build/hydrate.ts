@@ -1,19 +1,15 @@
 import { basename, dirname, extname, join } from "path";
 
 const hydrateCodeTemplate = `
-import { hydrate } from "react-dom"
+import { hydrateRoot } from 'react-dom/client';
 import Page from "{path}"
 type PageProps = Record<string, any> | undefined | null
 
-function renderPage(props: PageProps) {
-// @ts-ignore
- return hydrate(<Page {...props} />, document.getElementById('eagle-root'))
+export function hydratePage(props: PageProps) {
+  const container = document.getElementById('eagle-root')
+  // @ts-ignore
+  hydrateRoot(container, <Page {...props} />)
 }
-
-// @ts-ignore
-let props: PageProps = {/** placeholder */}
-
-renderPage(props)
 `;
 
 export function createHydratingTypeScriptStringOnPage(pagePath: string) {
@@ -22,7 +18,7 @@ export function createHydratingTypeScriptStringOnPage(pagePath: string) {
   const dir = dirname(pagePath);
   const hydratePageString = hydrateCodeTemplate.replace(
     "{path}",
-    join("../../", join(dir, base))
+    join("../../", "src", "pages", dir, base)
   );
   return hydratePageString;
 }

@@ -10,6 +10,6 @@ export function createHandlerTypeScriptStringOnPage(pagePath: string) {
   const subdir = dir.replace(/^src\/pages\/?/, "");
   const handlerTypescriptString = handlerTemplate
     .replace("{key}", join(subdir, base))
-    .replace("{path}", join("../../", dir, base));
+    .replace("{path}", join("../../", "src", "pages", dir, base));
   return handlerTypescriptString;
 }
