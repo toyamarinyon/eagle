@@ -1,6 +1,7 @@
 import { build } from "esbuild";
 import { writeFile } from "fs/promises";
 import { join } from "path";
+import { vanillaExtractPlugin } from "@vanilla-extract/esbuild-plugin";
 import { createHandlerTypeScriptStringOnPage } from "./handler";
 import { createHydratingTypeScriptStringOnPage } from "./hydrate";
 import { createManifest } from "./manifest";
@@ -42,10 +43,12 @@ export async function buildEagleNew(option?: Partial<BuildOption>) {
         entryPoints: [hydratingTypeScriptFilePath],
         jsx: "automatic",
         bundle: true,
+        minify: true,
         format: "esm",
         loader: { ".ts": "tsx" },
         target: "es2022",
-        outdir: join(buildOption.distDir, "public"),
+        plugins: [vanillaExtractPlugin()],
+        outdir: join(buildOption.distDir, "public", "assets"),
       });
     })
   );
@@ -76,6 +79,7 @@ export async function buildEagleNew(option?: Partial<BuildOption>) {
     loader: { ".ts": "tsx", ".js": "jsx" },
     jsx: "automatic",
     outfile: "dist/index.mjs",
+    plugins: [vanillaExtractPlugin({ outputCss: false })],
     external: ["__STATIC_CONTENT_MANIFEST"],
   });
 }

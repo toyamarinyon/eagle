@@ -71,7 +71,9 @@ export function render<Props>(
     "{{SCRIPT_PLACEHOLDER}}",
     `
 <script type="module">
-  import { hydratePage } from "/${pathnameToFilePath(url.pathname)}.js"
+  import { hydratePage } from "/assets/${pathnameToFilePath(url.pathname)}.js"
+  import styles from "/assets/${pathnameToFilePath(url.pathname)}.css" assert { type: "css" };
+  document.adoptedStyleSheets = [styles];
   hydratePage(${JSON.stringify(options.props)});
 </script>`
   );
