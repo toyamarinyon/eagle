@@ -21,12 +21,14 @@ importers:
       '@toyamarinyon/eagle': workspace:*
       '@types/react': ^18.0.15
       '@vanilla-extract/css': ^1.7.3
+      open-props: ^1.4.14
       react: ^18.2.0
       react-dom: ^18.2.0
       wrangler: ^2.0.18
       zod: ^3.17.10
     dependencies:
       '@vanilla-extract/css': 1.7.3
+      open-props: 1.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       zod: 3.17.10
@@ -3029,6 +3031,10 @@ packages:
       define-properties: 1.1.4
       has-symbols: 1.0.3
       object-keys: 1.1.1
+
+  /open-props/1.4.14:
+    resolution: {integrity: sha512-EkTUczMzty8mIvnWGpC41ELIejARiuljsXTEz7YDRKJn5dJ1/njsLTpNhn2rsM3JSW95p4G94ojsgzxbaiFmNA==}
+    dev: false
 
   /optionator/0.8.3:
     resolution: {integrity: sha512-+IW9pACdk3XWmmTXG8m3upGUJst5XRGzxMRjXzAuJ1XnIFNvfhjjIuYkDvysnPQ7qzqVzLt78BCruntqRhWQbA==}

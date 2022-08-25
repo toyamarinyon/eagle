@@ -63,7 +63,13 @@ export class Eagle<Session = unknown> {
     } catch (e) {
       const composed = compose(this.middlewareList);
       return await composed(request, async (request: Request) => {
-        return await handler(request, this.routes, this.webCryptSession);
+        return await handler(
+          request,
+          env,
+          ctx,
+          this.routes,
+          this.webCryptSession
+        );
       });
     }
   }

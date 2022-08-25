@@ -54,9 +54,10 @@ interface RenderOption<Props> {
   props: Props;
 }
 
-export function render<Props>(
+export async function render<Props>(
   page: PageFile<Props>,
   request: Request,
+  css: string,
   options: RenderOption<Props>
 ) {
   const url = new URL(request.url);
@@ -70,10 +71,9 @@ export function render<Props>(
   const clientCode = renderResult.replace(
     "{{SCRIPT_PLACEHOLDER}}",
     `
+<style>${css}</style>
 <script type="module">
   import { hydratePage } from "/assets/${pathnameToFilePath(url.pathname)}.js"
-  import styles from "/assets/${pathnameToFilePath(url.pathname)}.css" assert { type: "css" };
-  document.adoptedStyleSheets = [styles];
   hydratePage(${JSON.stringify(options.props)});
 </script>`
   );

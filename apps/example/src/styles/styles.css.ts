@@ -1,5 +1,6 @@
 import { style } from "@vanilla-extract/css";
+import OP from "open-props"
 
 export const container = style({
-  padding: 10,
+  padding: OP.sizeFluid5
 });

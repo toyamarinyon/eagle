@@ -2,7 +2,9 @@ import { WebCryptSession } from "webcrypt-session";
 import { AnyZodObject, z } from "zod";
 import { inferAnyZodObject } from "./inferAnyZodObject";
 import { render } from "./render";
-import { NotFoundError, router, Routes } from "./router";
+import { NotFoundError, pathnameToFilePath, router, Routes } from "./router";
+import manifestJSON from "__STATIC_CONTENT_MANIFEST";
+import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
 
 export class MethodNotAllowedError extends Error {
   constructor(path: string, method: string) {
@@ -27,8 +29,10 @@ export type Handler<SessionScheme = unknown> = (
 const zAny = z.any();
 type AnySession = z.infer<typeof zAny>;
 
-export async function handler<Session>(
+export async function handler<Session, Env>(
   request: Request,
+  env: Env,
+  ctx: ExecutionContext,
   routes: Routes,
   webCryptSession?:
     | WebCryptSession<inferAnyZodObject<Session>>
@@ -57,7 +61,29 @@ export async function handler<Session>(
     }
     const pagePropsArgs = { req: request, session: webCryptSession };
     const props = (await page.pageProps?.(pagePropsArgs)) ?? {};
-    const result = render(page, request, { props });
+
+    const url = new URL(request.url);
+    const js = await asset_from_kv(
+      new Request(
+        new URL(
+          `/assets/${pathnameToFilePath(url.pathname)}.js`,
+          url.origin
+        ).toString()
+      ),
+      env,
+      ctx
+    );
+    const css = await asset_from_kv(
+      new Request(
+        new URL(
+          `/assets/${pathnameToFilePath(url.pathname)}.css`,
+          url.origin
+        ).toString()
+      ),
+      env,
+      ctx
+    );
+    const result = await render(page, request, css, { props });
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",
@@ -87,5 +113,31 @@ export async function handler<Session>(
         },
       });
     }
+  }
+}
+
+async function asset_from_kv<Env extends Record<string, any>>(
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext
+) {
+  try {
+    const assetManifest = JSON.parse(manifestJSON);
+    // Add logic to decide whether to serve an asset or run your original Worker code
+    const response = await getAssetFromKV(
+      {
+        request,
+        waitUntil: (promise) => {
+          return ctx.waitUntil(promise);
+        },
+      },
+      {
+        ASSET_NAMESPACE: env.__STATIC_CONTENT,
+        ASSET_MANIFEST: assetManifest,
+      }
+    );
+    return await response.text();
+  } catch (error) {
+    return "";
   }
 }
