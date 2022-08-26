@@ -1,3 +1,3 @@
 export default function HelloWorld() {
-  return "Hello World";
+  return <div>Hello World</div>;
 }

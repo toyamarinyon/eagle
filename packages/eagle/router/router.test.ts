@@ -6,12 +6,12 @@ test("get file list", () => {
   const fileList = getPageFileList(
     "src/pages",
     [],
-    join(__dirname, "__stub__")
+    join(__dirname, "../__tests__", "stub")
   );
   expect(fileList).toMatchInlineSnapshot(`
     [
-      "src/pages/directory/hello.ts",
-      "src/pages/index.ts",
+      "src/pages/directory/hello.tsx",
+      "src/pages/index.tsx",
     ]
   `);
 });

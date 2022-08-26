@@ -6,6 +6,7 @@ const pkg = require(path.resolve("./package.json"));
 const external = [
   ...Object.keys(pkg.dependencies || {}),
   ...Object.keys(pkg.peerDependencies || {}),
+  '__STATIC_CONTENT_MANIFEST'
 ];
 
 const base = {
@@ -13,7 +14,7 @@ const base = {
   platform: "node",
   bundle: true,
   format: "cjs",
-  minify: true,
+  minify: false,
   external,
 };
 
@@ -31,12 +32,13 @@ build({
 
 // build lib
 build({
-  ...base,
-  entryPoints: [join('runtime', "index.ts")],
+  // ...base,
+  entryPoints: [join("runtime", "index.ts")],
   outfile: join("dist", "index.js"),
-  sourcemap: true,
   platform: "node",
   bundle: true,
+  loader: { ".ts": "tsx" },
+  jsx: "automatic",
   format: "esm",
   external,
 });

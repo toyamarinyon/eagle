@@ -19,7 +19,7 @@ type inferPagePropsContext<SessionScheme = unknown> =
 
 export type PageProps<Session = unknown, Props = Record<string, any>> = (
   args: inferPagePropsContext<Session>
-) => Promise<Props | undefined | null>;
+) => Promise<Props>;
 
 export interface PageFile<Props = Record<string, any>, Session = unknown> {
   default: Page<Props>;

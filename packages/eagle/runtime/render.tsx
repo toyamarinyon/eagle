@@ -1,5 +1,6 @@
 import { PageFile } from "./page";
 import { renderToReadableStream, renderToString } from "react-dom/server";
+import { pathnameToFilePath } from "./router";
 
 function Document({ children }: { children: React.ReactNode }) {
   return (
@@ -51,13 +52,15 @@ function Document({ children }: { children: React.ReactNode }) {
 
 interface RenderOption<Props> {
   props: Props;
-  hydrateScript: string;
 }
 
-export function render<Props>(
+export async function render<Props extends Record<string, any>>(
   page: PageFile<Props>,
+  request: Request,
+  css: string,
   options: RenderOption<Props>
 ) {
+  const url = new URL(request.url);
   const Component = page.default;
   const html = (
     <Document>
@@ -68,8 +71,10 @@ export function render<Props>(
   const clientCode = renderResult.replace(
     "{{SCRIPT_PLACEHOLDER}}",
     `
+<style>${css}</style>
 <script type="module">
-${options.hydrateScript.replace("var props = {};", `var props = ${JSON.stringify(options.props)}`)}
+  import { hydratePage } from "/assets/${pathnameToFilePath(url.pathname)}.js"
+  hydratePage(${JSON.stringify(options.props)});
 </script>`
   );
   return clientCode;

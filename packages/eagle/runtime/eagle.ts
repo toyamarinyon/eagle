@@ -1,10 +1,12 @@
+import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
 import { createWebCryptSession, WebCryptSession } from "webcrypt-session";
 import { AnyZodObject } from "zod";
 import { compose } from "./compose";
 import { handler } from "./handler";
 import { inferAnyZodObject } from "./inferAnyZodObject";
 import { Middleware } from "./middleware";
-import { HydrateRoutes, Routes } from "./router";
+import { Routes } from "./router";
+import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 
 export interface EagleOption<T = AnyZodObject> {
   session: {
@@ -21,18 +23,15 @@ export type inferEagleSession<T> = T extends Eagle<
 
 export class Eagle<Session = unknown> {
   private routes: Routes<Session>;
-  private hydrateRoutes: HydrateRoutes;
   private middlewareList: Middleware[] = [];
 
   webCryptSession?: WebCryptSession<inferAnyZodObject<Session>>;
 
   constructor(
     routes: Routes,
-    hydrateRoutes: HydrateRoutes,
     option?: EagleOption<inferAnyZodObject<Session>>
   ) {
     this.routes = routes;
-    this.hydrateRoutes = hydrateRoutes;
     if (option?.session != null) {
       this.setupSession(option.session);
     }
@@ -41,16 +40,38 @@ export class Eagle<Session = unknown> {
   addMiddleware(middleware: Middleware) {
     this.middlewareList.push(middleware);
   }
-  async handleRequest(request: Request) {
-    const composed = compose(this.middlewareList);
-    return await composed(request, async (request: Request) => {
-      return await handler(
-        request,
-        this.routes,
-        this.hydrateRoutes,
-        this.webCryptSession
+  async handleRequest<Env extends Record<string, any>>(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext
+  ) {
+    try {
+      const assetManifest = JSON.parse(manifestJSON);
+      // Add logic to decide whether to serve an asset or run your original Worker code
+      return await getAssetFromKV(
+        {
+          request,
+          waitUntil: (promise) => {
+            return ctx.waitUntil(promise);
+          },
+        },
+        {
+          ASSET_NAMESPACE: env.__STATIC_CONTENT,
+          ASSET_MANIFEST: assetManifest,
+        }
       );
-    });
+    } catch (e) {
+      const composed = compose(this.middlewareList);
+      return await composed(request, async (request: Request) => {
+        return await handler(
+          request,
+          env,
+          ctx,
+          this.routes,
+          this.webCryptSession
+        );
+      });
+    }
   }
 
   setupSession(

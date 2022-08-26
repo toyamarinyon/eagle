@@ -1,5 +1,6 @@
-import { eagle } from ".eagle";
+import { eagle } from "$eagle";
 import { z } from "zod";
+
 export interface Env {
   // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
   // MY_KV_NAMESPACE: KVNamespace;
@@ -34,6 +35,6 @@ export default {
     env: Env,
     ctx: ExecutionContext
   ): Promise<Response> {
-    return app.handleRequest(request);
+    return app.handleRequest(request, env, ctx);
   },
 };

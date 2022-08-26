@@ -6,3 +6,6 @@ compatibility_flags = ["streams_enable_constructors"]
 
 [build]
 command = "pnpm install && pnpm build"
+
+[site]
+bucket = "./dist/public"

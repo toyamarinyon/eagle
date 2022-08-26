@@ -14,11 +14,7 @@ export class NotFoundError extends Error {
   }
 }
 
-export async function router<T = unknown>(
-  request: Request,
-  routes: Routes,
-  hydrateRoutes: HydrateRoutes
-) {
+export async function router<T = unknown>(request: Request, routes: Routes) {
   const url = new URL(request.url);
   const pathname = pathnameToFilePath(url.pathname);
   if (routes[pathname] == undefined) {
@@ -26,8 +22,7 @@ export async function router<T = unknown>(
   }
   const pageFile = routes[pathname];
   const page = await pageFile();
-  const hydrateScript = hydrateRoutes[pathname];
-  return { page, hydrateScript };
+  return { page };
 }
 
 export function pathnameToFilePath(pathname: string): string {
