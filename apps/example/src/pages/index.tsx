@@ -18,7 +18,7 @@ export const pageProps: PageProps<inferEagleSession<typeof app>> = async ({
   };
 };
 
-export default function HelloWorld(props: Record<string, any>) {
+export default function HelloWorld(props: ReturnType<typeof pageProps>) {
   const [count, setCount] = useState(0);
   return (
     <div className={container}>

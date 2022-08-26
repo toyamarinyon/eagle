@@ -29,7 +29,7 @@ export type Handler<SessionScheme = unknown> = (
 const zAny = z.any();
 type AnySession = z.infer<typeof zAny>;
 
-export async function handler<Session, Env>(
+export async function handler<Session, Env extends Record<string, any>>(
   request: Request,
   env: Env,
   ctx: ExecutionContext,
@@ -63,16 +63,6 @@ export async function handler<Session, Env>(
     const props = (await page.pageProps?.(pagePropsArgs)) ?? {};
 
     const url = new URL(request.url);
-    const js = await asset_from_kv(
-      new Request(
-        new URL(
-          `/assets/${pathnameToFilePath(url.pathname)}.js`,
-          url.origin
-        ).toString()
-      ),
-      env,
-      ctx
-    );
     const css = await asset_from_kv(
       new Request(
         new URL(

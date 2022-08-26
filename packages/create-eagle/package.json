@@ -14,10 +14,15 @@
   },
   "keywords": [],
   "dependencies": {
-    "@toyamarinyon/eagle": "workspace:*"
+    "@ltd/j-toml": "^1.35.0",
+    "@toyamarinyon/eagle": "workspace:*",
+    "cross-spawn": "^7.0.3"
   },
   "devDependencies": {
-    "esbuild": "^0.14.48"
+    "@eagle/config": "workspace:^0.1.0",
+    "@types/cross-spawn": "^6.0.2",
+    "@types/node": "^18.0.3",
+    "esbuild": "^0.15.0"
   },
   "author": "@toyamarinyon",
   "license": "MIT",

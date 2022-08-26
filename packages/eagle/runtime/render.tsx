@@ -54,7 +54,7 @@ interface RenderOption<Props> {
   props: Props;
 }
 
-export async function render<Props>(
+export async function render<Props extends Record<string, any>>(
   page: PageFile<Props>,
   request: Request,
   css: string,

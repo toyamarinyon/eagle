@@ -1,5 +1,6 @@
 import { build } from "esbuild";
-import { writeFile } from "fs/promises";
+import { writeFile, mkdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { join } from "path";
 import { vanillaExtractPlugin } from "@vanilla-extract/esbuild-plugin";
 import { createHandlerTypeScriptStringOnPage } from "./handler";
@@ -22,8 +23,22 @@ const defaultBuildOption: BuildOption = {
   distDir: "dist",
   runtimeDir: "node_modules/$eagle",
 };
+
+async function mkdirIfNotExists(dir: string) {
+  if (!existsSync(dir)) {
+    await mkdir(dir);
+  }
+}
+
 export async function buildEagleNew(option?: Partial<BuildOption>) {
   const buildOption = { ...defaultBuildOption, ...option };
+
+  // Create directory for the build and runtime
+  await mkdirIfNotExists(buildOption.distDir);
+  await mkdirIfNotExists(join(buildOption.distDir, "tmp"));
+  await mkdirIfNotExists(buildOption.runtimeDir);
+
+  // Create build manifest
   const manifest = createManifest(buildOption.pagesDir, buildOption.distDir);
 
   // Create hydrate code for each page.

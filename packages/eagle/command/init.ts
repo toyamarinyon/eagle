@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import * as fs from "fs";
+import { existsSync } from "fs";
+import { mkdir } from "fs/promises";
 import * as path from "path";
 import TOML from "@ltd/j-toml";
 import { sync } from "cross-spawn";
@@ -7,12 +8,16 @@ import { writeRuntime } from "./generate";
 
 const cwd = process.cwd();
 
+async function mkdirIfNotExists(dir: string) {
+  if (!existsSync(dir)) {
+    await mkdir(dir);
+  }
+}
+
 export async function init() {
   // Create a pages directory
   const pageDirectory = path.join(cwd, "src", "pages");
-  if (!fs.existsSync(pageDirectory)) {
-    fs.mkdirSync(pageDirectory);
-  }
+  await mkdirIfNotExists(pageDirectory);
 
   // Create a sample page file
   const samplePageFile = `
@@ -43,7 +48,13 @@ return 'Hello World';
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   // install dependencies
-  const dependencies = ["react"];
+  const dependencies = [
+    "react",
+    "@vanilla-extract/css",
+    "open-props",
+    "react-dom",
+    "zod",
+  ];
   sync("pnpm", ["install", ...dependencies], {
     stdio: "inherit",
   });
@@ -53,7 +64,7 @@ return 'Hello World';
     "wrangler",
     "@toyamarinyon/eagle",
     "typescript",
-    "types/react"
+    "types/react",
   ];
   sync("pnpm", ["install", "--save-dev", ...devDependencies], {
     stdio: "inherit",
