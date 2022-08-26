@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 import { program } from "commander";
-import { init, buildEagle } from "./command";
-import { buildEagleNew } from "./new-build";
+import { buildEagle } from "./builder";
 
 program.name("eagle cli").description("CLI for Eagle").version("1.0.0");
-program
-  .command("init")
-  .description("Initialize Eagle")
-  .action(() => {
-    init();
-  });
 
 program
   .command("build")
   .description("Build Eagle")
   .action(async () => {
-    await buildEagle({});
-  });
-
-program
-  .command("new-build")
-  .description("Build Eagle")
-  .action(async () => {
-    await buildEagleNew();
+    await buildEagle();
   });
 
 program.parse();

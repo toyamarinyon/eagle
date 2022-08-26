@@ -30,7 +30,7 @@ async function mkdirIfNotExists(dir: string) {
   }
 }
 
-export async function buildEagleNew(option?: Partial<BuildOption>) {
+export async function buildEagle(option?: Partial<BuildOption>) {
   const buildOption = { ...defaultBuildOption, ...option };
 
   // Create directory for the build and runtime
