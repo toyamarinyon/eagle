@@ -5,7 +5,7 @@ import { join } from "path";
 import { vanillaExtractPlugin } from "@vanilla-extract/esbuild-plugin";
 import { createHandlerTypeScriptStringOnPage } from "./handler";
 import { createHydratingTypeScriptStringOnPage } from "./hydrate";
-import { createManifest } from "./manifest";
+import { createAssetManifest, createPageManifest } from "./manifest";
 
 /**
  * Options for the build command.
@@ -39,9 +39,13 @@ export async function buildEagle(option?: Partial<BuildOption>) {
   await mkdirIfNotExists(buildOption.runtimeDir);
 
   // Create build manifest
-  const manifest = createManifest(buildOption.pagesDir, buildOption.distDir);
+  const manifest = createPageManifest(
+    buildOption.pagesDir,
+    buildOption.distDir
+  );
 
   // Create hydrate code for each page.
+  const assetDir = join(buildOption.distDir, "public", "assets");
   Promise.all(
     manifest.pages.map(async (page) => {
       const hydratingTypeScriptString = createHydratingTypeScriptStringOnPage(
@@ -67,6 +71,8 @@ export async function buildEagle(option?: Partial<BuildOption>) {
       });
     })
   );
+  // Create asset manifest
+  await createAssetManifest(assetDir, buildOption.distDir);
 
   // Create the handler from the pages
   const handlers = manifest.pages.map((page) => {
