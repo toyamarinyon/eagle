@@ -17,11 +17,13 @@ interface BuildOption {
   pagesDir: string;
   distDir: string;
   runtimeDir: string;
+  isDev: boolean;
 }
 const defaultBuildOption: BuildOption = {
   pagesDir: "src/pages",
   distDir: "dist",
   runtimeDir: "node_modules/$eagle",
+  isDev: true,
 };
 
 async function mkdirIfNotExists(dir: string) {
@@ -62,11 +64,16 @@ export async function buildEagle(option?: Partial<BuildOption>) {
         entryPoints: [hydratingTypeScriptFilePath],
         jsx: "automatic",
         bundle: true,
-        minify: true,
+        minify: !buildOption.isDev,
         format: "esm",
         loader: { ".ts": "tsx" },
         target: "es2022",
         plugins: [vanillaExtractPlugin()],
+        define: {
+          ["process.env.NODE_ENV"]: buildOption.isDev
+            ? "development"
+            : "production",
+        },
         outdir: join(buildOption.distDir, "public", "assets"),
       });
     })
@@ -95,10 +102,18 @@ export async function buildEagle(option?: Partial<BuildOption>) {
     entryPoints: ["src/index.ts"],
     format: "esm",
     target: "es2022",
-    bundle: true,
+    bundle: !buildOption.isDev,
     minify: true,
     loader: { ".ts": "tsx", ".js": "jsx" },
+    footer: {
+      js: `/** build at: ${Date.now()} */`,
+    },
     jsx: "automatic",
+    define: {
+      ["process.env.NODE_ENV"]: buildOption.isDev
+        ? "development"
+        : "production",
+    },
     outfile: "dist/index.mjs",
     plugins: [vanillaExtractPlugin({ outputCss: false })],
     external: ["__STATIC_CONTENT_MANIFEST"],

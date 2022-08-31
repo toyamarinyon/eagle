@@ -3,6 +3,12 @@ import { program } from "commander";
 import { watch } from "chokidar";
 import { buildEagle } from "./builder";
 import concurrently from "concurrently";
+import { Writable } from "node:stream";
+import { stdout } from "node:process";
+import {
+  sendMessageToBrowser,
+  startWebSocketServer,
+} from "./dev-websocket/server";
 
 program.name("eagle cli").description("CLI for Eagle").version("1.0.0");
 
@@ -10,7 +16,7 @@ program
   .command("build")
   .description("Build Eagle")
   .action(async () => {
-    await buildEagle();
+    await buildEagle({ isDev: false });
   });
 
 program
@@ -31,6 +37,17 @@ program
   .command("dev")
   .description("start development")
   .action(() => {
+    const ws = startWebSocketServer();
+    const outputStream = new Writable({
+      write: (chunk, encoding, next) => {
+        stdout.write(chunk);
+        if (chunk.toString().includes("Done syncing assets")) {
+          sendMessageToBrowser();
+          console.log("-----Done syncing assets-----");
+        }
+        next();
+      },
+    });
     const { result } = concurrently(
       [
         {
@@ -46,14 +63,19 @@ program
         prefix: "name",
         killOthers: ["failure"],
         restartTries: 0,
+        outputStream: outputStream,
       }
     );
-    result.then(
-      () => {},
-      (error: any) => {
-        // console.error(error);
-      }
-    );
+    result
+      .then(
+        () => {},
+        (error: any) => {
+          // console.error(error);
+        }
+      )
+      .finally(() => {
+        ws.close();
+      });
   });
 
 program.parse();

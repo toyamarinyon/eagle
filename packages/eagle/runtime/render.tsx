@@ -62,6 +62,15 @@ export async function render<Props extends Record<string, any>>(
 ) {
   const url = new URL(request.url);
   const Component = page.default;
+  const isDev = process.env.NODE_ENV === "development";
+  const reloadScript = isDev
+    ? `
+  const ws = new WebSocket('ws://localhost:30111');
+  ws.addEventListener("message", async (event) => {
+    location.reload();
+  });
+  `
+    : "";
   const html = (
     <Document>
       <Component {...options.props} />
@@ -75,6 +84,8 @@ export async function render<Props extends Record<string, any>>(
 <script type="module">
   import { hydratePage } from "/assets/${pathnameToFilePath(url.pathname)}.js"
   hydratePage(${JSON.stringify(options.props)});
+
+  ${reloadScript}
 </script>`
   );
   return clientCode;
