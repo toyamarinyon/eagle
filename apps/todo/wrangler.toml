@@ -1,0 +1,11 @@
+
+name = 'todo'
+main = 'dist/index.mjs'
+compatibility_date = '2022-08-27'
+compatibility_flags = [
+	'streams_enable_constructors',
+]
+
+[site]
+
+bucket = './dist/public'
