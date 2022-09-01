@@ -43,7 +43,6 @@ program
         stdout.write(chunk);
         if (chunk.toString().includes("Done syncing assets")) {
           sendMessageToBrowser();
-          console.log("-----Done syncing assets-----");
         }
         next();
       },

@@ -69,11 +69,6 @@ export async function buildEagle(option?: Partial<BuildOption>) {
         loader: { ".ts": "tsx" },
         target: "es2022",
         plugins: [vanillaExtractPlugin()],
-        define: {
-          ["process.env.NODE_ENV"]: buildOption.isDev
-            ? "development"
-            : "production",
-        },
         outdir: join(buildOption.distDir, "public", "assets"),
       });
     })
@@ -102,18 +97,13 @@ export async function buildEagle(option?: Partial<BuildOption>) {
     entryPoints: ["src/index.ts"],
     format: "esm",
     target: "es2022",
-    bundle: !buildOption.isDev,
-    minify: true,
+    bundle: true,
+    minify: !buildOption.isDev,
     loader: { ".ts": "tsx", ".js": "jsx" },
     footer: {
       js: `/** build at: ${Date.now()} */`,
     },
     jsx: "automatic",
-    define: {
-      ["process.env.NODE_ENV"]: buildOption.isDev
-        ? "development"
-        : "production",
-    },
     outfile: "dist/index.mjs",
     plugins: [vanillaExtractPlugin({ outputCss: false })],
     external: ["__STATIC_CONTENT_MANIFEST"],

@@ -62,6 +62,8 @@ export async function render<Props extends Record<string, any>>(
 ) {
   const url = new URL(request.url);
   const Component = page.default;
+  /** @todo remove this hack */
+  // @ts-ignore
   const isDev = process.env.NODE_ENV === "development";
   const reloadScript = isDev
     ? `
@@ -80,7 +82,10 @@ export async function render<Props extends Record<string, any>>(
   const clientCode = renderResult.replace(
     "{{SCRIPT_PLACEHOLDER}}",
     `
-<style>${css}</style>
+<style>
+@import "https://unpkg.com/open-props/normalize.min.css";
+${css}
+</style>
 <script type="module">
   import { hydratePage } from "/assets/${pathnameToFilePath(url.pathname)}.js"
   hydratePage(${JSON.stringify(options.props)});
