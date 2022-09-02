@@ -22,8 +22,8 @@ type ActionFormProps = {
   path: string;
   method: ActionMethod;
 };
-class PageAction<TActions extends Actions, TSession = unknown> {
-  private actions: TActions;
+export class PageAction<TActions extends Actions, TSession = unknown> {
+  readonly actions: TActions;
   constructor(actions: TActions) {
     this.actions = actions;
   }
@@ -47,4 +47,11 @@ class PageAction<TActions extends Actions, TSession = unknown> {
 
 export function createActions<SessionScheme = unknown>() {
   return new PageAction<{}, SessionScheme>({});
+}
+
+type inferActions<T> = T extends PageAction<{}> ? T['actions']: never
+export function formProps<T>(name: keyof inferActions<T>) {
+  return {
+    action: String(name),
+  };
 }

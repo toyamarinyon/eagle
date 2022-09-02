@@ -1,5 +1,6 @@
 import { WebCryptSession } from "webcrypt-session";
 import { AnyZodObject } from "zod";
+import { PageAction } from "./action";
 import { Handler } from "./handler";
 
 type Page<T = Record<string, any>> = (props: T) => JSX.Element;
@@ -25,4 +26,5 @@ export interface PageFile<Props = Record<string, any>, Session = unknown> {
   default: Page<Props>;
   pageProps?: PageProps<Session, Props>;
   handler?: PageHandler<Session>;
+  action?: PageAction<{}, Session>;
 }

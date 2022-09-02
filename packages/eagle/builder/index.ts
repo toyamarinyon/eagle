@@ -66,10 +66,11 @@ export async function buildEagle(option?: Partial<BuildOption>) {
         bundle: true,
         minify: !buildOption.isDev,
         format: "esm",
-        loader: { ".ts": "tsx" },
+        loader: { ".ts": "tsx", ".js": "jsx"  },
         target: "es2022",
         plugins: [vanillaExtractPlugin()],
         outdir: join(buildOption.distDir, "public", "assets"),
+        external: ["__STATIC_CONTENT_MANIFEST"],
       });
     })
   );
