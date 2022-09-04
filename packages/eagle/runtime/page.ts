@@ -1,11 +1,8 @@
 import { WebCryptSession } from "webcrypt-session";
 import { AnyZodObject } from "zod";
-import { Handler } from "./handler";
+import { PageAction } from "./action";
 
 type Page<T = Record<string, any>> = (props: T) => JSX.Element;
-export interface PageHandler<Session = unknown> {
-  POST?: Handler<Session>;
-}
 
 type inferPagePropsContext<SessionScheme = unknown> =
   SessionScheme extends AnyZodObject
@@ -24,5 +21,5 @@ export type PageProps<Session = unknown, Props = Record<string, any>> = (
 export interface PageFile<Props = Record<string, any>, Session = unknown> {
   default: Page<Props>;
   pageProps?: PageProps<Session, Props>;
-  handler?: PageHandler<Session>;
+  actions?: PageAction<{}, Session>;
 }

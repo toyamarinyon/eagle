@@ -1,9 +1,13 @@
-import { test, expect, describe } from "vitest";
+import { test, expect, describe, vi } from "vitest";
 import { createWebCryptSession } from "webcrypt-session";
 import { z } from "zod";
 import { handler } from "./handler";
 import { Routes } from "./router";
 
+const ctx: ExecutionContext = {
+  waitUntil: vi.fn(),
+  passThroughOnException: vi.fn(),
+};
 const routes: Routes = {
   ["index"]: async () => ({
     default: (props) => <div>{props.message}</div>,
@@ -39,19 +43,13 @@ const routes: Routes = {
     },
   }),
 };
-const hydrateRoutes = {
-  ["index"]: "function hydrate(){}",
-  ["hello"]: "function hydrate(){}",
-  ["subdir/index"]: "function hydrate(){}",
-  ["subdir/hello"]: "function hydrate(){}",
-  ["signIn"]: "function hydrate(){}",
-};
 
 test("response html", async () => {
   const response = await handler(
     new Request("http://localhost:8787"),
-    routes,
-    hydrateRoutes
+    {},
+    ctx,
+    routes
   );
   expect(await response?.text()).toMatchInlineSnapshot(
     `
@@ -66,8 +64,9 @@ describe("POST", () => {
   test("response POST handler", async () => {
     const response = await handler(
       new Request("http://localhost:8787", { method: "POST" }),
-      routes,
-      hydrateRoutes
+      {},
+      ctx,
+      routes
     );
     expect(await response?.json()).toMatchInlineSnapshot(`
     {
@@ -86,8 +85,9 @@ describe("POST", () => {
           email: "toyamarinyon@gmail.com",
         }).toString(),
       }),
-      routes,
-      hydrateRoutes
+      {},
+      ctx,
+      routes
     );
     expect(await response?.text()).toMatchInlineSnapshot(
       '"<div>Submit email is toyamarinyon@gmail.com</div>"'
@@ -98,8 +98,9 @@ describe("POST", () => {
 test("response 404", async () => {
   const response = await handler(
     new Request("http://localhost:8787/notfound"),
-    routes,
-    hydrateRoutes
+    {},
+    ctx,
+    routes
   );
   expect(response?.status).toBe(404);
 });
@@ -135,8 +136,9 @@ test("session", async () => {
   };
   const response = await handler(
     request,
+    {},
+    ctx,
     routesWithSession,
-    hydrateRoutesWithSession,
     webCryptSession
   );
   expect(await response?.text()).toMatchInlineSnapshot(`

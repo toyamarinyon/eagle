@@ -5,29 +5,13 @@ import { render } from "./render";
 import { NotFoundError, pathnameToFilePath, router, Routes } from "./router";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
+import { PageAction } from "./action";
 
 export class MethodNotAllowedError extends Error {
   constructor(path: string, method: string) {
     super(`Method Not Allowed: path:${path}, method:${method}`);
   }
 }
-
-type inferHandlerArgs<SessionScheme = unknown> =
-  SessionScheme extends AnyZodObject
-    ? {
-        req: Request;
-        session: WebCryptSession<SessionScheme>;
-      }
-    : {
-        req: Request;
-      };
-
-export type Handler<SessionScheme = unknown> = (
-  args: inferHandlerArgs<SessionScheme>
-) => Promise<Response>;
-
-const zAny = z.any();
-type AnySession = z.infer<typeof zAny>;
 
 export async function handler<Session, Env extends Record<string, any>>(
   request: Request,
@@ -38,23 +22,23 @@ export async function handler<Session, Env extends Record<string, any>>(
     | WebCryptSession<inferAnyZodObject<Session>>
     | undefined
     | null
-) {
+): Promise<Response> {
   try {
     const { page } = await router(request, routes);
-    if (request.method === "POST") {
-      if (page?.handler?.POST == null) {
-        const url = new URL(request.url);
-        throw new MethodNotAllowedError(url.pathname, request.method);
-      }
-      if (webCryptSession != null) {
-        return (page.handler.POST as Handler<AnySession>)({
-          req: request,
-          session: webCryptSession,
-        });
-      } else {
-        return page.handler.POST({ req: request });
-      }
-      // Now, we can only handle GET and POST requests.
+    const url = new URL(request.url);
+    const actionKey = url.searchParams.get("action");
+    if (
+      request.method === "POST" &&
+      page.actions != null &&
+      actionKey != null
+    ) {
+      return await (page.actions as PageAction<{}, Session>).exec(
+        actionKey,
+        request,
+        env,
+        ctx,
+        webCryptSession
+      );
     } else if (request.method !== "GET") {
       const url = new URL(request.url);
       throw new MethodNotAllowedError(url.pathname, request.method);
@@ -62,7 +46,6 @@ export async function handler<Session, Env extends Record<string, any>>(
     const pagePropsArgs = { req: request, session: webCryptSession };
     const props = (await page.pageProps?.(pagePropsArgs)) ?? {};
 
-    const url = new URL(request.url);
     const css = await asset_from_kv(
       new Request(
         new URL(
