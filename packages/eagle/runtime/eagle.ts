@@ -48,7 +48,7 @@ export class Eagle<Session = unknown> {
     try {
       const assetManifest = JSON.parse(manifestJSON);
       // Add logic to decide whether to serve an asset or run your original Worker code
-      return await getAssetFromKV(
+      const response = await getAssetFromKV(
         {
           request,
           waitUntil: (promise) => {
@@ -60,6 +60,10 @@ export class Eagle<Session = unknown> {
           ASSET_MANIFEST: assetManifest,
         }
       );
+      // return response;
+      const text = await response.text()
+      const replacedText = text.replace('###CURRENT_PAGE_URL###', '${new URL(location.href).pathname}')
+      return new Response(replacedText, response)
     } catch (e) {
       const composed = compose(this.middlewareList);
       return await composed(request, async (request: Request) => {

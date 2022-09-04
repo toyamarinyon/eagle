@@ -70,7 +70,6 @@ export async function buildEagle(option?: Partial<BuildOption>) {
         target: "es2022",
         plugins: [vanillaExtractPlugin()],
         outdir: join(buildOption.distDir, "public", "assets"),
-        external: ["__STATIC_CONTENT_MANIFEST"],
       });
     })
   );

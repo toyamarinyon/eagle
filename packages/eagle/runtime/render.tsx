@@ -92,6 +92,6 @@ ${css}
 
   ${reloadScript}
 </script>`
-  );
+  ).replace('###CURRENT_PAGE_URL###', url.pathname);
   return clientCode;
 }

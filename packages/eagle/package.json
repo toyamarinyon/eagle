@@ -8,12 +8,15 @@
     "eg": "dist/eagle.js"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "action.js",
+    "action.d.ts"
   ],
   "scripts": {
     "build": "run-p build:*",
     "build:esbuild": "node build.js",
     "build:type": "tsc --project tsconfig.build.json",
+    "build:type-lib": "tsc --project tsconfig.lib.build.json",
     "test": "vitest",
     "test:ci": "vitest run"
   },
