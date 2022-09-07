@@ -5,7 +5,7 @@ import { sprinkles } from "../../styles/sprinkles.css";
 export const layout = style([
   sprinkles({
     marginX: "auto",
-    marginTop: 11
+    paddingTop: 11,
   }),
   {
     width: OP["sizeContent1"],

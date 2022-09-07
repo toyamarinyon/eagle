@@ -1,5 +1,5 @@
-
 import { eagle } from "$eagle";
+import { z } from "zod";
 
 export interface Env {
   // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -12,7 +12,15 @@ export interface Env {
   // MY_BUCKET: R2Bucket;
 }
 
-export const app = eagle();
+const sessionScheme = z.object({
+  username: z.string(),
+});
+export const app = eagle({
+  session: {
+    scheme: sessionScheme,
+    secret: "IF4B#t69!WlX$uS22blaxDvzJJ%$vEh%",
+  },
+});
 
 export default {
   async fetch(
@@ -23,4 +31,3 @@ export default {
     return app.handleRequest(request, env, ctx);
   },
 };
-

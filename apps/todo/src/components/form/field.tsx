@@ -1,11 +1,15 @@
 import { fieldSet, label } from "./field.css";
-export const FormField = (): JSX.Element => {
+interface Props {
+  name: string;
+  label: string;
+}
+export const TextField = ({ name, label }: Props): JSX.Element => {
   return (
     <div className={fieldSet}>
-      <label htmlFor="name" className={label}>
-        Username
+      <label htmlFor={name} className={label}>
+        {label}
       </label>
-      <input type="text" name="name" id="name" />
+      <input type="text" name={name} id={name} />
     </div>
   );
 };
