@@ -9,8 +9,8 @@
   },
   "files": [
     "dist/",
-    "action.js",
-    "action.d.ts"
+    "handler.js",
+    "handler.d.ts"
   ],
   "scripts": {
     "build": "run-p build:*",

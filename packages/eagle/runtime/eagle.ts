@@ -21,7 +21,7 @@ export type inferEagleSession<T> = T extends Eagle<
   ? SessionScheme
   : never;
 
-export class Eagle<Session = unknown> {
+export class Eagle<Session = any, Env = any> {
   private routes: Routes<Session>;
   private middlewareList: Middleware[] = [];
 
@@ -61,9 +61,12 @@ export class Eagle<Session = unknown> {
         }
       );
       // return response;
-      const text = await response.text()
-      const replacedText = text.replace('###CURRENT_PAGE_URL###', '${new URL(location.href).pathname}')
-      return new Response(replacedText, response)
+      const text = await response.text();
+      const replacedText = text.replace(
+        "###CURRENT_PAGE_URL###",
+        "${new URL(location.href).pathname}"
+      );
+      return new Response(replacedText, response);
     } catch (e) {
       const composed = compose(this.middlewareList);
       return await composed(request, async (request: Request) => {

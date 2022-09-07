@@ -1,11 +1,11 @@
 import { WebCryptSession } from "webcrypt-session";
-import { AnyZodObject, z } from "zod";
+import { AnyZodObject } from "zod";
 import { inferAnyZodObject } from "./inferAnyZodObject";
 import { render } from "./render";
 import { NotFoundError, pathnameToFilePath, router, Routes } from "./router";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
-import { PageAction } from "./action";
+import { PageHandler, ActionHandlers } from "./handlerBuilder";
 
 export class MethodNotAllowedError extends Error {
   constructor(path: string, method: string) {
@@ -29,16 +29,23 @@ export async function handler<Session, Env extends Record<string, any>>(
     const actionKey = url.searchParams.get("action");
     if (
       request.method === "POST" &&
-      page.actions != null &&
+      page.handler != null &&
       actionKey != null
     ) {
-      return await (page.actions as PageAction<{}, Session>).exec(
-        actionKey,
-        request,
+      const pageHandler = page.handler as PageHandler<
+        ActionHandlers<Env, Session>,
+        Session
+      >;
+      const actionHandler = pageHandler.actionHandlers[actionKey];
+      if (actionHandler == null) {
+        throw new Error("Missing action");
+      }
+      await actionHandler.resolve({
+        req: request,
         env,
         ctx,
-        webCryptSession
-      );
+        session: webCryptSession ?? ({} as WebCryptSession<AnyZodObject>),
+      });
     } else if (request.method !== "GET") {
       const url = new URL(request.url);
       throw new MethodNotAllowedError(url.pathname, request.method);

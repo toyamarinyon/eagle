@@ -66,7 +66,7 @@ export async function buildEagle(option?: Partial<BuildOption>) {
         bundle: true,
         minify: !buildOption.isDev,
         format: "esm",
-        loader: { ".ts": "tsx", ".js": "jsx"  },
+        loader: { ".ts": "tsx", ".js": "jsx" },
         target: "es2022",
         plugins: [vanillaExtractPlugin()],
         outdir: join(buildOption.distDir, "public", "assets"),
@@ -87,8 +87,8 @@ export async function buildEagle(option?: Partial<BuildOption>) {
     ${handlers.join("\n")}
   }
 
-  export function eagle<T = unknown>(option?: EagleOption<inferAnyZodObject<T>>) {
-    return new Eagle(handlers, option);
+  export function eagle<T = unknown, Env = any>(option?: EagleOption<inferAnyZodObject<T>>) {
+    return new Eagle<inferAnyZodObject<T>, Env>(handlers, option);
   }
   `;
 

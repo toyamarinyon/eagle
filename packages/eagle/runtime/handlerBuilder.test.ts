@@ -1,6 +1,9 @@
 import { test, expect, describe, vi } from "vitest";
+import { z } from "zod";
+import { Eagle } from "./eagle";
 import { pageHandler } from "./handlerBuilder";
 
+vi.mock("__STATIC_CONTENT_MANIFEST", () => {});
 describe("handlerBuilder", () => {
   test("be able to build handler", async () => {
     const handler = pageHandler();
@@ -13,7 +16,7 @@ describe("handlerBuilder", () => {
     });
     expect(handler).not.toBeUndefined();
     expect(Object.keys(handler.actionHandlers)).toStrictEqual(["foo"]);
-    await handler.actionHandlers["foo"].resolve();
+    await handler.actionHandlers["foo"].resolve({} as any);
     expect(fn).toHaveBeenCalledTimes(1);
   });
   test("be able to add props builder", async () => {
@@ -24,5 +27,20 @@ describe("handlerBuilder", () => {
     const props = await handler.propsBuilder();
     expect(fn).toHaveBeenCalledTimes(1);
     expect(props).toStrictEqual({ name: "hello" });
+  });
+  test("session", () => {
+    const sessionScheme = z.object({
+      name: z.string(),
+    });
+    interface Env {
+      MY_KV_NAMESPACE: KVNamespace;
+    }
+    const app = new Eagle<typeof sessionScheme, Env>(
+      {},
+      { session: { scheme: sessionScheme, secret: "secret" } }
+    );
+    const handler = pageHandler<typeof app>().addAction("foo", {
+      resolve: async () => new Response("foo"),
+    });
   });
 });

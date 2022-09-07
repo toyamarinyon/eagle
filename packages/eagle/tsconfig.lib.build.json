@@ -1,6 +1,9 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["./runtime/action.ts", "placeholder.d.ts"],
+  "include": [
+    "./runtime/handlerBuilder.ts",
+    "placeholder.d.ts"
+  ],
   "compilerOptions": {
     "types": ["@cloudflare/workers-types"],
     "outDir": "./dist",

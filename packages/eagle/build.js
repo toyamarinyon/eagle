@@ -33,7 +33,10 @@ build({
 // build lib
 build({
   // ...base,
-  entryPoints: [join("runtime", "index.ts"), join("runtime", "action.ts")],
+  entryPoints: [
+    join("runtime", "index.ts"),
+    join("runtime", "handlerBuilder.ts"),
+  ],
   outdir: "dist",
   platform: "node",
   bundle: true,

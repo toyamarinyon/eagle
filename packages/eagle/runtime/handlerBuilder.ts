@@ -1,13 +1,29 @@
+import { WebCryptSession } from "webcrypt-session";
 import { z } from "zod";
+import type { Eagle } from "./eagle";
+import { inferAnyZodObject } from "./inferAnyZodObject";
 
-interface ActionHandler {
-  input?: z.ZodTypeAny;
-  resolve: () => Promise<Response>;
+interface ResolveArg<Env, Session> {
+  req: Request;
+  env: Env;
+  ctx: ExecutionContext;
+  session: WebCryptSession<inferAnyZodObject<Session>>;
 }
-type ActionHandlers = Record<string, ActionHandler>;
+interface ActionHandler<Env, Session> {
+  input?: z.ZodTypeAny;
+  resolve: (arg: ResolveArg<Env, Session>) => Promise<Response>;
+}
+export type ActionHandlers<Env = any, Session = any> = Record<
+  string,
+  ActionHandler<Env, Session>
+>;
 type PropsBuilder = () => Promise<Record<string, any>>;
 
-class PageHandler<TActionHandlers extends ActionHandlers> {
+export class PageHandler<
+  TActionHandlers extends ActionHandlers,
+  TSession = any,
+  TEnv = any
+> {
   readonly actionHandlers: TActionHandlers;
   readonly propsBuilder: PropsBuilder;
   constructor(actionHandlers: TActionHandlers, propsBuilder: PropsBuilder) {
@@ -15,8 +31,15 @@ class PageHandler<TActionHandlers extends ActionHandlers> {
     this.propsBuilder = propsBuilder;
   }
 
-  addAction<TKey extends string>(key: TKey, handler: ActionHandler) {
-    return new PageHandler<TActionHandlers & Record<TKey, ActionHandler>>(
+  addAction<TKey extends string>(
+    key: TKey,
+    handler: ActionHandler<TEnv, TSession>
+  ) {
+    return new PageHandler<
+      TActionHandlers & Record<TKey, ActionHandler<TEnv, TSession>>,
+      TSession,
+      TEnv
+    >(
       {
         ...this.actionHandlers,
         [key]: handler,
@@ -26,7 +49,7 @@ class PageHandler<TActionHandlers extends ActionHandlers> {
   }
 
   addPropsBuilder(propsBuilder: PropsBuilder) {
-    return new PageHandler<TActionHandlers>(
+    return new PageHandler<TActionHandlers, TSession, TEnv>(
       {
         ...this.actionHandlers,
       },
@@ -35,6 +58,24 @@ class PageHandler<TActionHandlers extends ActionHandlers> {
   }
 }
 
-export function pageHandler() {
-  return new PageHandler({}, () => Promise.resolve({}));
+type inferSession<TApp> = TApp extends Eagle<infer TSession> ? TSession : never;
+type inferEnv<TApp> = TApp extends Eagle<any, infer TEnv> ? TEnv : never;
+
+export function createHandler<TApp>() {
+  return new PageHandler<{}, inferSession<TApp>, inferEnv<TApp>>({}, () =>
+    Promise.resolve({})
+  );
+}
+
+type inferActions<TPageHandlers> = TPageHandlers extends PageHandler<{}, {}, {}>
+  ? TPageHandlers["actionHandlers"]
+  : never;
+export function formProps<TPageHandlers>(
+  name: keyof inferActions<TPageHandlers>
+) {
+  return {
+    // ###CURRENT_PAGE_URL### is replaced with the current page URL on the Edge
+    action: `###CURRENT_PAGE_URL###?action=${String(name)}`,
+    method: "POST",
+  };
 }
