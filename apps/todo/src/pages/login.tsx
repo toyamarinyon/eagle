@@ -18,15 +18,14 @@ const formScheme = z.object({
 });
 
 export const handler = createHandler<typeof app>().addAction("login", {
-  resolve: async ({ req, session }) => {
-    const formData = await req.formData();
-    const formObject = Object.fromEntries(formData.entries());
+  input: z.object({
+    username: z.string().min(1),
+  }),
+  resolve: async ({ req, session, input }) => {
     try {
-      const { username } = formScheme.parse(formObject);
       await session.save({
-        username,
+        username: input.username,
       });
-      console.log('hello?')
       return new Response(null, {
         status: 303,
         headers: {

@@ -1,5 +1,5 @@
 import { WebCryptSession } from "webcrypt-session";
-import { AnyZodObject } from "zod";
+import { AnyZodObject, ZodObject } from "zod";
 import { inferAnyZodObject } from "./inferAnyZodObject";
 import { render } from "./render";
 import { NotFoundError, router, Routes } from "./router";
@@ -54,10 +54,37 @@ export async function handler<Session, Env extends Record<string, any>>(
       if (actionHandler == null) {
         throw new Error("Missing action");
       }
+      // If action handler has input scheme, validate input and exit process with returning
+      // response if validation fails
+      let input = {};
+      if (actionHandler.input != null) {
+        if (!(actionHandler.input instanceof ZodObject)) {
+          throw new Error("Input must be a ZodObject");
+        }
+        if (request.headers.get("Content-Type") === "application/json") {
+          try {
+            input = actionHandler.input.parse(request.body);
+          } catch (e) {
+            return new Response(JSON.stringify(e), { status: 400 });
+          }
+        } else if (
+          request.headers.get("Content-Type") ===
+          "application/x-www-form-urlencoded"
+        ) {
+          const formData = await request.formData();
+          const formObject = Object.fromEntries(formData.entries());
+          try {
+            input = actionHandler.input.parse(formObject);
+          } catch (e) {
+            return new Response(JSON.stringify(e), { status: 400 });
+          }
+        }
+      }
       return await actionHandler.resolve({
         req: request,
         env,
         ctx,
+        input,
         session: webCryptSession ?? ({} as WebCryptSession<AnyZodObject>),
       });
     } else if (request.method !== "GET") {

@@ -8,7 +8,7 @@ export const layout = style([
     paddingTop: 11,
   }),
   {
-    width: OP["sizeContent1"],
+    width: OP["size14"],
   },
 ]);
 

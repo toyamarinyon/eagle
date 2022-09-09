@@ -1,28 +1,37 @@
 import { WebCryptSession } from "webcrypt-session";
-import { z } from "zod";
+import { AnyZodObject, z } from "zod";
 import type { Meave } from "./meave";
 import { inferAnyZodObject } from "./inferAnyZodObject";
 
-interface ResolveArg<Env, Session> {
+interface ResolveArg<Env, Session, Input> {
+  req: Request;
+  env: Env;
+  ctx: ExecutionContext;
+  session: WebCryptSession<inferAnyZodObject<Session>>;
+  input: Input extends AnyZodObject ? z.infer<Input> : unknown;
+}
+
+interface HandlerArg<Env, Session> {
   req: Request;
   env: Env;
   ctx: ExecutionContext;
   session: WebCryptSession<inferAnyZodObject<Session>>;
 }
-interface ActionHandler<Env, Session> {
-  input?: z.ZodTypeAny;
-  resolve: (arg: ResolveArg<Env, Session>) => Promise<Response>;
+
+interface ActionHandler<Env, Session, Input> {
+  input?: Input;
+  resolve: (arg: ResolveArg<Env, Session, Input>) => Promise<Response>;
 }
-type PropsBuilderArg<Env, Session> = ResolveArg<Env, Session>;
+type PropsBuilderArg<Env, Session> = HandlerArg<Env, Session>;
 export type ActionHandlers<Env = any, Session = any> = Record<
   string,
-  ActionHandler<Env, Session>
+  ActionHandler<Env, Session, AnyZodObject | {}>
 >;
 type PropsBuilder<Env, Session> = (
   arg: PropsBuilderArg<Env, Session>
 ) => Promise<Record<string, any>>;
 
-type GuardArg<Env, Session> = ResolveArg<Env, Session>;
+type GuardArg<Env, Session> = HandlerArg<Env, Session>;
 export type Guard<Env, Session> = (
   arg: GuardArg<Env, Session>
 ) => Promise<Response | void>;
@@ -45,12 +54,12 @@ export class PageHandler<
     this.guards = guard;
   }
 
-  addAction<TKey extends string>(
+  addAction<TKey extends string, TScheme>(
     key: TKey,
-    handler: ActionHandler<TEnv, TSession>
+    handler: ActionHandler<TEnv, TSession, TScheme>
   ) {
     return new PageHandler<
-      TActionHandlers & Record<TKey, ActionHandler<TEnv, TSession>>,
+      TActionHandlers & Record<TKey, ActionHandler<TEnv, TSession, TScheme>>,
       TSession,
       TEnv
     >(

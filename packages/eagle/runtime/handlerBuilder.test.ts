@@ -1,17 +1,17 @@
 import { test, expect, describe, vi } from "vitest";
 import { z } from "zod";
 import { Meave } from "./meave";
-import { pageHandler } from "./handlerBuilder";
+import { createHandler } from "./handlerBuilder";
 
 vi.mock("__STATIC_CONTENT_MANIFEST", () => {});
 describe("handlerBuilder", () => {
   test("be able to build handler", async () => {
-    const handler = pageHandler();
+    const handler = createHandler();
     expect(handler).not.toBeUndefined();
   });
   test("be able to add action", async () => {
     const fn = vi.fn().mockImplementation(() => new Response("foo"));
-    const handler = pageHandler().addAction("foo", {
+    const handler = createHandler().addAction("foo", {
       resolve: fn,
     });
     expect(handler).not.toBeUndefined();
@@ -23,8 +23,8 @@ describe("handlerBuilder", () => {
     const fn = vi.fn().mockImplementation(() => ({
       name: "hello",
     }));
-    const handler = pageHandler().addPropsBuilder(fn);
-    const props = await handler.propsBuilder();
+    const handler = createHandler().addPropsBuilder(fn);
+    const props = handler.propsBuilder;
     expect(fn).toHaveBeenCalledTimes(1);
     expect(props).toStrictEqual({ name: "hello" });
   });
@@ -39,7 +39,7 @@ describe("handlerBuilder", () => {
       {},
       { session: { scheme: sessionScheme, secret: "secret" } }
     );
-    const handler = pageHandler<typeof app>().addAction("foo", {
+    const handler = createHandler<typeof app>().addAction("foo", {
       resolve: async () => new Response("foo"),
     });
   });
