@@ -22,7 +22,7 @@ interface BuildOption {
 const defaultBuildOption: BuildOption = {
   pagesDir: "src/pages",
   distDir: "dist",
-  runtimeDir: "node_modules/$eagle",
+  runtimeDir: "node_modules/$meave",
   isDev: true,
 };
 
@@ -32,7 +32,7 @@ async function mkdirIfNotExists(dir: string) {
   }
 }
 
-export async function buildEagle(option?: Partial<BuildOption>) {
+export async function buildMeave(option?: Partial<BuildOption>) {
   const buildOption = { ...defaultBuildOption, ...option };
 
   // Create directory for the build and runtime
@@ -81,14 +81,14 @@ export async function buildEagle(option?: Partial<BuildOption>) {
     return createHandlerTypeScriptStringOnPage(page.path);
   });
   const runtime = `
-  import { handler, PageFile, Eagle, EagleOption, inferAnyZodObject } from "@toyamarinyon/eagle";
+  import { handler, PageFile, Meave, MeaveOption, inferAnyZodObject } from "meave";
 
   const handlers = {
     ${handlers.join("\n")}
   }
 
-  export function eagle<T = unknown, Env = any>(option?: EagleOption<inferAnyZodObject<T>>) {
-    return new Eagle<inferAnyZodObject<T>, Env>(handlers, option);
+  export function meave<T = unknown, Env = any>(option?: MeaveOption<inferAnyZodObject<T>>) {
+    return new Meave<inferAnyZodObject<T>, Env>(handlers, option);
   }
   `;
 

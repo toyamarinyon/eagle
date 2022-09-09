@@ -1,6 +1,5 @@
 import { WebCryptSession } from "webcrypt-session";
 import { AnyZodObject } from "zod";
-import { PageAction } from "./action";
 import { PageHandler } from "./handlerBuilder";
 
 type Page<T = Record<string, any>> = (props: T) => JSX.Element;

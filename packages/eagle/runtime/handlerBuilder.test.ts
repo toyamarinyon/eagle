@@ -1,6 +1,6 @@
 import { test, expect, describe, vi } from "vitest";
 import { z } from "zod";
-import { Eagle } from "./eagle";
+import { Meave } from "./meave";
 import { pageHandler } from "./handlerBuilder";
 
 vi.mock("__STATIC_CONTENT_MANIFEST", () => {});
@@ -35,7 +35,7 @@ describe("handlerBuilder", () => {
     interface Env {
       MY_KV_NAMESPACE: KVNamespace;
     }
-    const app = new Eagle<typeof sessionScheme, Env>(
+    const app = new Meave<typeof sessionScheme, Env>(
       {},
       { session: { scheme: sessionScheme, secret: "secret" } }
     );

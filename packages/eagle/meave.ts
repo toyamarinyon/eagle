@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { program } from "commander";
 import { watch } from "chokidar";
-import { buildEagle } from "./builder";
+import { buildMeave } from "./builder";
 import concurrently from "concurrently";
 import { Writable } from "node:stream";
 import { stdout } from "node:process";
@@ -10,25 +10,25 @@ import {
   startWebSocketServer,
 } from "./dev-websocket/server";
 
-program.name("eagle cli").description("CLI for Eagle").version("1.0.0");
+program.name("meave cli").description("CLI for Meave").version("1.0.0");
 
 program
   .command("build")
-  .description("Build Eagle")
+  .description("Build Maeve")
   .action(async () => {
-    await buildEagle({ isDev: false });
+    await buildMeave({ isDev: false });
   });
 
 program
   .command("dev-server")
-  .description("Run Eagle in dev mode")
+  .description("Run Meave in dev mode")
   .action(async () => {
-    await buildEagle();
+    await buildMeave();
     watch("./src", {
       persistent: true,
     }).on("change", async (_event) => {
       console.log(`> Found a change. Rebuild assets.`);
-      await buildEagle();
+      await buildMeave();
       console.log(`> Rebuild complete.`);
     });
   });
@@ -54,7 +54,7 @@ program
           name: "worker",
         },
         {
-          command: "eagle dev-server",
+          command: "meave dev-server",
           name: "dev-server",
         },
       ],

@@ -1,6 +1,6 @@
 import { WebCryptSession } from "webcrypt-session";
 import { z } from "zod";
-import type { Eagle } from "./eagle";
+import type { Meave } from "./meave";
 import { inferAnyZodObject } from "./inferAnyZodObject";
 
 interface ResolveArg<Env, Session> {
@@ -13,11 +13,19 @@ interface ActionHandler<Env, Session> {
   input?: z.ZodTypeAny;
   resolve: (arg: ResolveArg<Env, Session>) => Promise<Response>;
 }
+type PropsBuilderArg<Env, Session> = ResolveArg<Env, Session>;
 export type ActionHandlers<Env = any, Session = any> = Record<
   string,
   ActionHandler<Env, Session>
 >;
-type PropsBuilder = () => Promise<Record<string, any>>;
+type PropsBuilder<Env, Session> = (
+  arg: PropsBuilderArg<Env, Session>
+) => Promise<Record<string, any>>;
+
+type GuardArg<Env, Session> = ResolveArg<Env, Session>;
+export type Guard<Env, Session> = (
+  arg: GuardArg<Env, Session>
+) => Promise<Response | void>;
 
 export class PageHandler<
   TActionHandlers extends ActionHandlers,
@@ -25,10 +33,16 @@ export class PageHandler<
   TEnv = any
 > {
   readonly actionHandlers: TActionHandlers;
-  readonly propsBuilder: PropsBuilder;
-  constructor(actionHandlers: TActionHandlers, propsBuilder: PropsBuilder) {
+  readonly propsBuilder: PropsBuilder<TEnv, TSession>;
+  readonly guards: Guard<TEnv, TSession>[];
+  constructor(
+    actionHandlers: TActionHandlers,
+    propsBuilder: PropsBuilder<TEnv, TSession>,
+    guard: Guard<TEnv, TSession>[]
+  ) {
     this.actionHandlers = actionHandlers;
     this.propsBuilder = propsBuilder;
+    this.guards = guard;
   }
 
   addAction<TKey extends string>(
@@ -44,26 +58,40 @@ export class PageHandler<
         ...this.actionHandlers,
         [key]: handler,
       },
-      this.propsBuilder
+      this.propsBuilder,
+      this.guards
     );
   }
 
-  addPropsBuilder(propsBuilder: PropsBuilder) {
+  addPropsBuilder(propsBuilder: PropsBuilder<TEnv, TSession>) {
     return new PageHandler<TActionHandlers, TSession, TEnv>(
       {
         ...this.actionHandlers,
       },
-      propsBuilder
+      propsBuilder,
+      this.guards
+    );
+  }
+
+  addGuard(guard: Guard<TEnv, TSession>) {
+    return new PageHandler<TActionHandlers, TSession, TEnv>(
+      {
+        ...this.actionHandlers,
+      },
+      this.propsBuilder,
+      [...this.guards, guard]
     );
   }
 }
 
-type inferSession<TApp> = TApp extends Eagle<infer TSession> ? TSession : never;
-type inferEnv<TApp> = TApp extends Eagle<any, infer TEnv> ? TEnv : never;
+type inferSession<TApp> = TApp extends Meave<infer TSession> ? TSession : never;
+type inferEnv<TApp> = TApp extends Meave<any, infer TEnv> ? TEnv : never;
 
 export function createHandler<TApp>() {
-  return new PageHandler<{}, inferSession<TApp>, inferEnv<TApp>>({}, () =>
-    Promise.resolve({})
+  return new PageHandler<{}, inferSession<TApp>, inferEnv<TApp>>(
+    {},
+    () => Promise.resolve({}),
+    []
   );
 }
 

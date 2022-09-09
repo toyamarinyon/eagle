@@ -1,7 +1,7 @@
 import { defineProperties, createSprinkles } from "@vanilla-extract/sprinkles";
 import OP from "open-props";
 
-const space = {
+const sizes = {
   "000": OP["size000"],
   0: OP["size00"],
   1: OP["size1"],
@@ -41,14 +41,15 @@ const responsiveProperties = defineProperties({
       "space-between",
     ],
     alignItems: ["stretch", "flex-start", "center", "flex-end"],
-    paddingTop: space,
-    paddingBottom: space,
-    paddingLeft: space,
-    paddingRight: space,
-    marginTop: space,
-    marginBottom: space,
-    marginLeft: space,
-    marginRight: space,
+    paddingTop: sizes,
+    paddingBottom: sizes,
+    paddingLeft: sizes,
+    paddingRight: sizes,
+    marginTop: sizes,
+    marginBottom: sizes,
+    marginLeft: sizes,
+    marginRight: sizes,
+    width: sizes,
   },
   shorthands: {
     padding: ["paddingTop", "paddingBottom", "paddingLeft", "paddingRight"],

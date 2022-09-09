@@ -15,7 +15,7 @@
   "keywords": [],
   "dependencies": {
     "@ltd/j-toml": "^1.35.0",
-    "@toyamarinyon/eagle": "workspace:*",
+    "eagle": "workspace:*",
     "cross-spawn": "^7.0.3"
   },
   "devDependencies": {

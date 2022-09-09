@@ -6,7 +6,7 @@ import Page from "{path}"
 type PageProps = Record<string, any> | undefined | null
 
 export function hydratePage(props: PageProps) {
-  const container = document.getElementById('eagle-root')
+  const container = document.getElementById('meave-root')
   // @ts-ignore
   hydrateRoot(container, <Page {...props} />)
 }

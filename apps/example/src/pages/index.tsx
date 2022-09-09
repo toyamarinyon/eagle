@@ -1,4 +1,4 @@
-import { inferEagleSession, PageHandler, PageProps } from "@toyamarinyon/eagle";
+import { PageProps } from "meave";
 
 import { useState } from "react";
 import { app } from "..";

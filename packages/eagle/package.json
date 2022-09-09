@@ -1,11 +1,10 @@
 {
-  "name": "@toyamarinyon/eagle",
+  "name": "meave",
   "version": "0.3.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "eagle": "dist/eagle.js",
-    "eg": "dist/eagle.js"
+    "meave": "dist/meave.js"
   },
   "files": [
     "dist/",
@@ -53,8 +52,8 @@
   "author": "@toyamarinyon",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/toyamarinyon/eagle/issues"
+    "url": "https://github.com/toyamarinyon/maeve/issues"
   },
-  "homepage": "https://github.com/toyamarinyon/eagle",
+  "homepage": "https://github.com/toyamarinyon/maeve",
   "description": ""
 }

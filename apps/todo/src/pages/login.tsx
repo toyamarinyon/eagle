@@ -1,4 +1,4 @@
-import { createHandler, formProps } from "@toyamarinyon/eagle/handler";
+import { createHandler, formProps } from "meave/handler";
 import { z } from "zod";
 import { app } from "..";
 import { Button } from "../components/button";
@@ -26,6 +26,7 @@ export const handler = createHandler<typeof app>().addAction("login", {
       await session.save({
         username,
       });
+      console.log('hello?')
       return new Response(null, {
         status: 303,
         headers: {
@@ -56,7 +57,7 @@ export const Page = (
       >
         Todo on Edge
       </Heading>
-      <form {...formProps<typeof handlers>("login")}>
+      <form {...formProps<typeof handler>("login")}>
         <TextField label="Username" name="username" />
         <Button type="submit" fullWidth>
           Login

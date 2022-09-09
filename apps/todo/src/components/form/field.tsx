@@ -13,3 +13,14 @@ export const TextField = ({ name, label }: Props): JSX.Element => {
     </div>
   );
 };
+
+export const TextAreaField = ({ name, label }: Props): JSX.Element => {
+  return (
+    <div className={fieldSet}>
+      <label htmlFor={name} className={label}>
+        {label}
+      </label>
+      <textarea name={name} id={name} />
+    </div>
+  );
+};

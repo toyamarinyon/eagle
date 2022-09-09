@@ -8,20 +8,20 @@ import { Middleware } from "./middleware";
 import { Routes } from "./router";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 
-export interface EagleOption<T = AnyZodObject> {
+export interface MeaveOption<T = AnyZodObject> {
   session: {
     scheme: T;
     secret: string;
   };
 }
 
-export type inferEagleSession<T> = T extends Eagle<
+export type inferMeaveSession<T> = T extends Meave<
   inferAnyZodObject<infer SessionScheme>
 >
   ? SessionScheme
   : never;
 
-export class Eagle<Session = any, Env = any> {
+export class Meave<Session = any, Env = any> {
   private routes: Routes<Session>;
   private middlewareList: Middleware[] = [];
 
@@ -29,7 +29,7 @@ export class Eagle<Session = any, Env = any> {
 
   constructor(
     routes: Routes,
-    option?: EagleOption<inferAnyZodObject<Session>>
+    option?: MeaveOption<inferAnyZodObject<Session>>
   ) {
     this.routes = routes;
     if (option?.session != null) {
@@ -82,7 +82,7 @@ export class Eagle<Session = any, Env = any> {
   }
 
   setupSession(
-    sessionOption: EagleOption<inferAnyZodObject<Session>>["session"]
+    sessionOption: MeaveOption<inferAnyZodObject<Session>>["session"]
   ) {
     this.addMiddleware({
       onRequest: async (request) => {

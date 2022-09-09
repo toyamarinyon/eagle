@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { z } from "zod";
-import { Eagle } from "./eagle";
+import { Meave } from "./meave";
 import { Routes } from "./router";
 
 const routes: Routes<typeof sessionScheme> = {
@@ -32,14 +32,14 @@ const sessionScheme = z.object({
   userId: z.number(),
 });
 
-test("createEagle", async () => {
-  const eagle = new Eagle(routes, hydrateRoutes, {
+test("create Meave", async () => {
+  const meave = new Meave(routes, hydrateRoutes, {
     session: {
       scheme: sessionScheme,
       secret: "IF4B#t69!WlX$uS22blaxDvzJJ%$vEh%",
     },
   });
-  const response1 = await eagle.handleRequest(
+  const response1 = await meave.handleRequest(
     new Request("http://localhost:8787", {
       headers: {
         cookie: "session=Ekvxbb%2F1pRAsZZWq--%2FybF8SeKlgnR%2FKn7eEiFeA%3D%3D",
@@ -51,7 +51,7 @@ test("createEagle", async () => {
     <script type=\\"module\\"></script></body></html>"
   `);
 
-  const response2 = await eagle.handleRequest(
+  const response2 = await meave.handleRequest(
     new Request("http://localhost:8787", {
       method: "POST",
       headers: {
@@ -81,7 +81,7 @@ test("without session", async () => {
     ["subdir/index"]: async () => ({ default: () => <div>subdir index</div> }),
     ["subdir/hello"]: async () => ({ default: () => <div>subdir hello</div> }),
   };
-  const eagle = new Eagle(routes2, hydrateRoutes);
+  const eagle = new Meave(routes2, hydrateRoutes);
   const response1 = await eagle.handleRequest(
     new Request("http://localhost:8787")
   );

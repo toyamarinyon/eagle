@@ -1,6 +1,6 @@
 import { PageFile } from "./page";
 import { renderToReadableStream, renderToString } from "react-dom/server";
-import { pathnameToFilePath } from "./router";
+import { pathnameToFilePath } from "./handler";
 
 function Document({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +12,7 @@ function Document({ children }: { children: React.ReactNode }) {
         <title>Document</title>
       </head>
       <body>
-        <div id="eagle-root">{children}</div>
+        <div id="meave-root">{children}</div>
         {"{{SCRIPT_PLACEHOLDER}}"}
       </body>
     </html>

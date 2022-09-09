@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "start": "wrangler dev",
-    "build": "node ../../packages/eagle/dist/eagle.js build"
+    "build": "node ../../packages/eagle/dist/meave.js build"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.0",
-    "@toyamarinyon/eagle": "workspace:*",
+    "meave": "workspace:*",
     "@types/react": "^18.0.15",
     "wrangler": "^2.0.18"
   },

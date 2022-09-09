@@ -2,10 +2,10 @@ import { WebCryptSession } from "webcrypt-session";
 import { AnyZodObject } from "zod";
 import { inferAnyZodObject } from "./inferAnyZodObject";
 import { render } from "./render";
-import { NotFoundError, pathnameToFilePath, router, Routes } from "./router";
+import { NotFoundError, router, Routes } from "./router";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
-import { PageHandler, ActionHandlers } from "./handlerBuilder";
+import { PageHandler, ActionHandlers, Guard } from "./handlerBuilder";
 
 export class MethodNotAllowedError extends Error {
   constructor(path: string, method: string) {
@@ -27,6 +27,20 @@ export async function handler<Session, Env extends Record<string, any>>(
     const { page } = await router(request, routes);
     const url = new URL(request.url);
     const actionKey = url.searchParams.get("action");
+    // If handler has guards, run them and exit process with returning response if any of them returns a response
+    if (page.handler != null && page.handler.guards.length > 0) {
+      for (const guard of page.handler.guards) {
+        const result = await (guard as Guard<Env, Session>)({
+          req: request,
+          env,
+          ctx,
+          session: webCryptSession ?? ({} as WebCryptSession<AnyZodObject>),
+        });
+        if (result != null) {
+          return result;
+        }
+      }
+    }
     if (
       request.method === "POST" &&
       page.handler != null &&
@@ -40,7 +54,7 @@ export async function handler<Session, Env extends Record<string, any>>(
       if (actionHandler == null) {
         throw new Error("Missing action");
       }
-      await actionHandler.resolve({
+      return await actionHandler.resolve({
         req: request,
         env,
         ctx,
@@ -120,4 +134,13 @@ async function asset_from_kv<Env extends Record<string, any>>(
   } catch (error) {
     return "";
   }
+}
+
+export function pathnameToFilePath(pathname: string): string {
+  const filePath = pathname
+    .replace(/^\/$/, "index")
+    .replace(/\/$/, "/index")
+    .replace(/^\//, "")
+    .replace(/\//g, "-");
+  return filePath;
 }
