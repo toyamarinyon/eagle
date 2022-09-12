@@ -1,11 +1,11 @@
-import { createHandler } from "meave/handler";
+import { createHandler, inferProps } from "meave/handler";
 import { app } from "..";
 import { Layout } from "../components/layout";
 import { Heading } from "../components/typography";
 import { sprinkles } from "../styles/sprinkles.css";
 
-export const handler = createHandler<typeof app>().addGuard(
-  async ({ session }) => {
+export const handler = createHandler<typeof app>()
+  .addGuard(async ({ session }) => {
     if (session.username == null) {
       return new Response(null, {
         status: 303,
@@ -14,12 +14,16 @@ export const handler = createHandler<typeof app>().addGuard(
         },
       });
     }
-  }
-);
+  })
+  .addPropsResolver(async ({ session }) => {
+    return {
+      username: session.username,
+    };
+  });
 
-export const Page = (): JSX.Element => {
+export const Page = ({ username }: inferProps<typeof handler>): JSX.Element => {
   return (
-    <Layout>
+    <Layout showHeader username={username}>
       <Heading
         className={sprinkles({
           marginBottom: 6,

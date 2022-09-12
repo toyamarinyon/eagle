@@ -1,4 +1,3 @@
-import { readdirSync, statSync } from "fs";
 import { join, extname, basename, dirname } from "path";
 
 const handlerTemplate = `["{key}"]: async () => await import("{path}") as unknown as PageFile,`;

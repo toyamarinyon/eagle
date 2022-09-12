@@ -2,13 +2,31 @@ import { style, globalStyle } from "@vanilla-extract/css";
 import OP from "open-props";
 import { sprinkles } from "../../styles/sprinkles.css";
 
+export const header = style([
+  {
+    backgroundColor: OP["gray8"],
+    height: OP["size7"],
+  },
+]);
+export const headerContent = style([
+  sprinkles({
+    marginX: "auto",
+  }),
+  {
+    height: '100%',
+    width: OP["sizeContent3"],
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+]);
 export const layout = style([
   sprinkles({
     marginX: "auto",
     paddingTop: 11,
   }),
   {
-    width: OP["size14"],
+    width: OP["sizeContent2"],
   },
 ]);
 

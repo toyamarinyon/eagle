@@ -1,11 +1,18 @@
 import { WebCryptSession } from "webcrypt-session";
-import { AnyZodObject, ZodObject } from "zod";
+import { ZodObject } from "zod";
 import { inferAnyZodObject } from "./inferAnyZodObject";
 import { render } from "./render";
 import { NotFoundError, router, Routes } from "./router";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
-import { PageHandler, ActionHandlers, Guard } from "./handlerBuilder";
+import {
+  PageHandler,
+  ActionHandlers,
+  WeekGuard,
+  PropsResolver,
+  WeekActionHandler,
+  WeekPropsResolver,
+} from "./handlerBuilder";
 
 export class MethodNotAllowedError extends Error {
   constructor(path: string, method: string) {
@@ -27,20 +34,30 @@ export async function handler<Session, Env extends Record<string, any>>(
     const { page } = await router(request, routes);
     const url = new URL(request.url);
     const actionKey = url.searchParams.get("action");
+
+    ////////////////////////
+    //// Request guard  ///
+    ////////////////////////
+
     // If handler has guards, run them and exit process with returning response if any of them returns a response
     if (page.handler != null && page.handler.guards.length > 0) {
       for (const guard of page.handler.guards) {
-        const result = await (guard as Guard<Env, Session>)({
+        const guardFunc = guard as WeekGuard<Env>;
+        const result = await guardFunc({
           req: request,
           env,
           ctx,
-          session: webCryptSession ?? ({} as WebCryptSession<AnyZodObject>),
+          session: webCryptSession,
         });
         if (result != null) {
           return result;
         }
       }
     }
+
+    ////////////////////////
+    //// Resolve action  ///
+    ////////////////////////
     if (
       request.method === "POST" &&
       page.handler != null &&
@@ -48,9 +65,12 @@ export async function handler<Session, Env extends Record<string, any>>(
     ) {
       const pageHandler = page.handler as PageHandler<
         ActionHandlers<Env, Session>,
+        PropsResolver<Env, Session>,
         Session
       >;
-      const actionHandler = pageHandler.actionHandlers[actionKey];
+      const actionHandler = pageHandler.actionHandlers[
+        actionKey
+      ] as WeekActionHandler<Env>;
       if (actionHandler == null) {
         throw new Error("Missing action");
       }
@@ -85,14 +105,27 @@ export async function handler<Session, Env extends Record<string, any>>(
         env,
         ctx,
         input,
-        session: webCryptSession ?? ({} as WebCryptSession<AnyZodObject>),
+        session: webCryptSession,
       });
     } else if (request.method !== "GET") {
       const url = new URL(request.url);
       throw new MethodNotAllowedError(url.pathname, request.method);
     }
-    const pagePropsArgs = { req: request, session: webCryptSession };
-    const props = (await page.pageProps?.(pagePropsArgs)) ?? {};
+
+    //////////////////////
+    //// Resolve props ///
+    //////////////////////
+    let props = {};
+    if (page.handler?.propsResolver != null) {
+      const propsResolver = page.handler
+        .propsResolver as WeekPropsResolver<Env>;
+      props = await propsResolver({
+        req: request,
+        env,
+        ctx,
+        session: webCryptSession,
+      });
+    }
 
     const css = await asset_from_kv(
       new Request(

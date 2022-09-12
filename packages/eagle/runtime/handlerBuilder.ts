@@ -1,56 +1,131 @@
 import { WebCryptSession } from "webcrypt-session";
 import { AnyZodObject, z } from "zod";
 import type { Meave } from "./meave";
-import { inferAnyZodObject } from "./inferAnyZodObject";
 
-interface ResolveArg<Env, Session, Input> {
+/////////////////
+/////////////////
+/// Type Util ///
+/////////////////
+/////////////////
+
+/**
+ * Every handler runs with the following arguments
+ */
+export type HandlerArg<Env> = {
   req: Request;
   env: Env;
   ctx: ExecutionContext;
-  session: WebCryptSession<inferAnyZodObject<Session>>;
+};
+
+/**
+ * If session is enabled, session is passed to the handler
+ */
+type SessionHandlerArg<Session extends AnyZodObject> = {
+  session: WebCryptSession<Session>;
+};
+type WeekSessionHandlerArg = {
+  session: any;
+};
+
+/**
+ * If input is defined, action handler receives input
+ */
+type ActionResolverArg<Input> = {
   input: Input extends AnyZodObject ? z.infer<Input> : unknown;
-}
+};
+type WeekActionResolverArg = {
+  input: any;
+};
 
-interface HandlerArg<Env, Session> {
-  req: Request;
-  env: Env;
-  ctx: ExecutionContext;
-  session: WebCryptSession<inferAnyZodObject<Session>>;
-}
+/**
+ * Inference of the handler arguments
+ */
+export type inferHandlerArg<Env, Session> = Session extends AnyZodObject
+  ? HandlerArg<Env> & SessionHandlerArg<Session>
+  : WeekHandlerArg<Env>;
+type WeekHandlerArg<Env> = HandlerArg<Env> & WeekSessionHandlerArg;
 
+/**
+ * Inference of the action resolver arguments
+ */
+type inferActionResolverArg<Env, Session, Input> = Session extends AnyZodObject
+  ? HandlerArg<Env> & SessionHandlerArg<Session> & ActionResolverArg<Input>
+  : HandlerArg<Env> & ActionResolverArg<Input>;
+type WeekActionHandlerArg<Env> = HandlerArg<Env> &
+  WeekSessionHandlerArg &
+  WeekActionResolverArg;
+
+///////////////////////
+///////////////////////
+/// Type Definition ///
+///////////////////////
+///////////////////////
+
+/**
+ * Type of action handler
+ */
 interface ActionHandler<Env, Session, Input> {
   input?: Input;
-  resolve: (arg: ResolveArg<Env, Session, Input>) => Promise<Response>;
+  resolve: (
+    arg: inferActionResolverArg<Env, Session, Input>
+  ) => Promise<Response>;
 }
-type PropsBuilderArg<Env, Session> = HandlerArg<Env, Session>;
+export interface WeekActionHandler<Env> {
+  input?: any;
+  resolve: (arg: WeekActionHandlerArg<Env>) => Promise<Response>;
+}
+
+/**
+ * Collection of action handlers
+ */
 export type ActionHandlers<Env = any, Session = any> = Record<
   string,
   ActionHandler<Env, Session, AnyZodObject | {}>
 >;
-type PropsBuilder<Env, Session> = (
-  arg: PropsBuilderArg<Env, Session>
+
+/**
+ * Type of props resolver
+ */
+export type PropsResolver<Env, Session> = (
+  arg: inferHandlerArg<Env, Session>
 ) => Promise<Record<string, any>>;
 
-type GuardArg<Env, Session> = HandlerArg<Env, Session>;
+export type WeekPropsResolver<Env> = (
+  arg: WeekHandlerArg<Env>
+) => Promise<Record<string, any>>;
+
+/**
+ * Type of request guards
+ */
 export type Guard<Env, Session> = (
-  arg: GuardArg<Env, Session>
+  arg: inferHandlerArg<Env, Session>
 ) => Promise<Response | void>;
+export type WeekGuard<Env> = (
+  arg: WeekHandlerArg<Env>
+) => Promise<Response | void>;
+
+/////////////////////////
+/////////////////////////
+///  Class Definition ///
+/////////////////////////
+/////////////////////////
 
 export class PageHandler<
   TActionHandlers extends ActionHandlers,
+  TPropsResolver extends PropsResolver<TEnv, TSession>,
   TSession = any,
   TEnv = any
 > {
   readonly actionHandlers: TActionHandlers;
-  readonly propsBuilder: PropsBuilder<TEnv, TSession>;
+  readonly propsResolver: TPropsResolver;
   readonly guards: Guard<TEnv, TSession>[];
   constructor(
     actionHandlers: TActionHandlers,
-    propsBuilder: PropsBuilder<TEnv, TSession>,
+    propsResolver: TPropsResolver,
     guard: Guard<TEnv, TSession>[]
   ) {
     this.actionHandlers = actionHandlers;
-    this.propsBuilder = propsBuilder;
+    this.propsResolver = propsResolver;
     this.guards = guard;
   }
 
@@ -60,6 +135,7 @@ export class PageHandler<
   ) {
     return new PageHandler<
       TActionHandlers & Record<TKey, ActionHandler<TEnv, TSession, TScheme>>,
+      TPropsResolver,
       TSession,
       TEnv
     >(
@@ -67,44 +143,59 @@ export class PageHandler<
         ...this.actionHandlers,
         [key]: handler,
       },
-      this.propsBuilder,
+      this.propsResolver,
       this.guards
     );
   }
 
-  addPropsBuilder(propsBuilder: PropsBuilder<TEnv, TSession>) {
-    return new PageHandler<TActionHandlers, TSession, TEnv>(
+  addPropsResolver<NewPropsResolver extends PropsResolver<TEnv, TSession>>(
+    propsResolver: NewPropsResolver
+  ) {
+    return new PageHandler<TActionHandlers, NewPropsResolver, TSession, TEnv>(
       {
         ...this.actionHandlers,
       },
-      propsBuilder,
+      propsResolver,
       this.guards
     );
   }
 
   addGuard(guard: Guard<TEnv, TSession>) {
-    return new PageHandler<TActionHandlers, TSession, TEnv>(
+    return new PageHandler<TActionHandlers, TPropsResolver, TSession, TEnv>(
       {
         ...this.actionHandlers,
       },
-      this.propsBuilder,
+      this.propsResolver,
       [...this.guards, guard]
     );
   }
 }
 
-type inferSession<TApp> = TApp extends Meave<infer TSession> ? TSession : never;
-type inferEnv<TApp> = TApp extends Meave<any, infer TEnv> ? TEnv : never;
+/////////////////////
+/////////////////////
+/// Class Utility ///
+/////////////////////
+/////////////////////
 
-export function createHandler<TApp>() {
-  return new PageHandler<{}, inferSession<TApp>, inferEnv<TApp>>(
-    {},
-    () => Promise.resolve({}),
-    []
-  );
-}
+/**
+ * Inference session type from the App instance
+ */
+type inferSession<TApp> = TApp extends Meave<infer TSession> ? TSession : {};
 
-type inferActions<TPageHandlers> = TPageHandlers extends PageHandler<{}, {}, {}>
+/**
+ * Inference environment type from the App instance
+ */
+type inferEnv<TApp> = TApp extends Meave<any, infer TEnv> ? TEnv : {};
+
+/**
+ * Inference action type from the PageHandler instance
+ */
+type inferActions<TPageHandlers> = TPageHandlers extends PageHandler<
+  {},
+  any,
+  {},
+  {}
+>
   ? TPageHandlers["actionHandlers"]
   : never;
 export function formProps<TPageHandlers>(
@@ -114,5 +205,83 @@ export function formProps<TPageHandlers>(
     // ###CURRENT_PAGE_URL### is replaced with the current page URL on the Edge
     action: `###CURRENT_PAGE_URL###?action=${String(name)}`,
     method: "POST",
+  };
+}
+
+/**
+ * Inference session type from the PageHandler instance
+ */
+type inferHandlerSession<THandler> = THandler extends PageHandler<
+  any,
+  any,
+  infer TSession extends AnyZodObject,
+  any
+>
+  ? z.infer<TSession>
+  : {};
+
+/**
+ * Helper of create page handler
+ * @returns PageHandler
+ */
+export function createHandler<TApp>() {
+  return new PageHandler<
+    {},
+    PropsResolver<inferEnv<TApp>, inferSession<TApp>>,
+    inferSession<TApp>,
+    inferEnv<TApp>
+  >({}, async () => ({}), []);
+}
+
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+/// Page handler runtime resolve Utility ///
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+
+/**
+ * Inference return type of PropsBuilder from the PageHandler instance
+ */
+export type inferPropsBuilder<THandler> = THandler extends PageHandler<
+  any,
+  infer TPropsBuilder extends PropsResolver<any, any>,
+  any,
+  any
+>
+  ? Awaited<ReturnType<TPropsBuilder>>
+  : {};
+
+/**
+ * Type of resolver
+ */
+type HandlerGeneratedProps<TPageHandler extends PageHandler<any, any, any>> = {
+  formProps: (key: keyof inferActions<TPageHandler>) => Record<string, string>;
+  session: inferHandlerSession<TPageHandler>;
+} & {
+  [K in keyof inferPropsBuilder<TPageHandler>]: string;
+};
+export type inferProps<THandler> = THandler extends PageHandler<any, any, any>
+  ? HandlerGeneratedProps<THandler>
+  : never;
+
+export async function resolveHandlerToProps<
+  TPageHandler extends PageHandler<any, any, any>
+>(
+  handler: TPageHandler,
+  args: HandlerArg<{}>
+): Promise<HandlerGeneratedProps<TPageHandler>> {
+  function fp(name: keyof inferActions<typeof handler>) {
+    return {
+      // Note: ###CURRENT_PAGE_URL### is replaced with the current page URL on the Edge
+      action: `###CURRENT_PAGE_URL###?action=${String(name)}`,
+      method: "POST",
+    };
+  }
+  const props = await handler.propsResolver(args);
+
+  return {
+    formProps: fp,
+    session: {} as inferHandlerSession<typeof handler>,
+    ...props,
   };
 }
