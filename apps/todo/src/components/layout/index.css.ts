@@ -4,7 +4,7 @@ import { sprinkles } from "../../styles/sprinkles.css";
 
 export const header = style([
   {
-    backgroundColor: OP["gray8"],
+    backgroundColor: OP["gray7"],
     height: OP["size7"],
   },
 ]);
@@ -13,8 +13,9 @@ export const headerContent = style([
     marginX: "auto",
   }),
   {
+    // fontSize: OP["fontSize0"],
     height: '100%',
-    width: OP["sizeContent3"],
+    width: OP["sizeFluid10"],
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -23,10 +24,10 @@ export const headerContent = style([
 export const layout = style([
   sprinkles({
     marginX: "auto",
-    paddingTop: 11,
+    paddingTop: 9,
   }),
   {
-    width: OP["sizeContent2"],
+    width: OP["sizeFluid9"],
   },
 ]);
 

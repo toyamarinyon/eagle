@@ -84,7 +84,6 @@ export async function render<Props extends Record<string, any>>(
       "{{SCRIPT_PLACEHOLDER}}",
       `
 <style>
-@import "https://unpkg.com/open-props/normalize.min.css";
 ${css}
 </style>
 <script type="module">

@@ -146,6 +146,10 @@ export async function handler<Session, Env extends Record<string, any>>(
             session: webCryptSession,
           });
 
+    const res = await fetch(
+      "https://unpkg.com/open-props@1.4.14/normalize.min.css"
+    );
+    const resetCss = await res.text();
     const css = await asset_from_kv(
       new Request(
         new URL(
@@ -156,7 +160,7 @@ export async function handler<Session, Env extends Record<string, any>>(
       env,
       ctx
     );
-    const result = await render(page, request, css, { props });
+    const result = await render(page, request, `${resetCss} ${css}`, { props });
     return new Response(result, {
       headers: {
         "content-type": "text/html;charset=UTF-8",
