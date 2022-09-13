@@ -1,20 +1,17 @@
 import { createHandler } from "meave/handler";
-import { z } from "zod";
 import { app } from "..";
 
-export const handler = createHandler<typeof app>().addAction("login", {
-  input: z.object({
-    username: z.string().min(1),
-  }),
-  resolve: async ({ session, input }) => {
-    await session.save({
-      username: input.username,
-    });
+export const handler = createHandler<typeof app>().addDirectAction({
+  resolve: async () => {
+    /** @todo: implements session.destroy */
     return new Response(null, {
       status: 303,
       headers: {
-        location: "/",
+        location: '/login',
+        "Set-Cookie": "session=delete; expires=Thu, 01 Jan 1970 00:00:00 GMT",
       },
     });
   },
 });
+
+export default handler

@@ -12,6 +12,7 @@ import {
   PropsResolver,
   WeekActionHandler,
   WeekPropsResolver,
+  resolveHandlerToProps,
 } from "./handlerBuilder";
 
 export class MethodNotAllowedError extends Error {
@@ -107,6 +108,26 @@ export async function handler<Session, Env extends Record<string, any>>(
         input,
         session: webCryptSession,
       });
+    } else if (page.handler?.hasDirectAction()) {
+      /**
+       * Resolve direct action
+       * @todo Merge with action resolver
+       */
+      const pageHandler = page.handler as PageHandler<
+        ActionHandlers<Env, Session>,
+        PropsResolver<Env, Session>,
+        Session
+      >;
+      const actionHandler = pageHandler.actionHandlers[
+        "direct"
+      ] as WeekActionHandler<Env>;
+      return await actionHandler.resolve({
+        req: request,
+        env,
+        ctx,
+        input: {},
+        session: webCryptSession,
+      });
     } else if (request.method !== "GET") {
       const url = new URL(request.url);
       throw new MethodNotAllowedError(url.pathname, request.method);
@@ -115,17 +136,15 @@ export async function handler<Session, Env extends Record<string, any>>(
     //////////////////////
     //// Resolve props ///
     //////////////////////
-    let props = {};
-    if (page.handler?.propsResolver != null) {
-      const propsResolver = page.handler
-        .propsResolver as WeekPropsResolver<Env>;
-      props = await propsResolver({
-        req: request,
-        env,
-        ctx,
-        session: webCryptSession,
-      });
-    }
+    const props =
+      page.handler == null
+        ? {}
+        : await resolveHandlerToProps(page.handler, {
+            req: request,
+            env,
+            ctx,
+            session: webCryptSession,
+          });
 
     const css = await asset_from_kv(
       new Request(
@@ -159,7 +178,6 @@ export async function handler<Session, Env extends Record<string, any>>(
         },
       });
     } else {
-      console.log(error);
       return new Response(JSON.stringify(error), {
         status: 500,
         headers: {

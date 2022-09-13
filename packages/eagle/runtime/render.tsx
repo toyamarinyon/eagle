@@ -79,19 +79,28 @@ export async function render<Props extends Record<string, any>>(
     </Document>
   );
   const renderResult = renderToString(html);
-  const clientCode = renderResult.replace(
-    "{{SCRIPT_PLACEHOLDER}}",
-    `
+  const clientCode = renderResult
+    .replace(
+      "{{SCRIPT_PLACEHOLDER}}",
+      `
 <style>
 @import "https://unpkg.com/open-props/normalize.min.css";
 ${css}
 </style>
 <script type="module">
   import { hydratePage } from "/assets/${pathnameToFilePath(url.pathname)}.js"
-  hydratePage(${JSON.stringify(options.props)});
+  const props = ${JSON.stringify(options.props)}
+  props.formProps = (name) => {
+    return {
+      action: \`###CURRENT_PAGE_URL###?action=\${String(name)}\`,
+      method: "POST",
+    };
+  },
+  hydratePage(props);
 
   ${reloadScript}
 </script>`
-  ).replace('###CURRENT_PAGE_URL###', url.pathname);
+    )
+    .replace(/###CURRENT_PAGE_URL###/g, url.pathname);
   return clientCode;
 }

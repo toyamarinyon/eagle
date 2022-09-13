@@ -148,6 +148,13 @@ export class PageHandler<
     );
   }
 
+  addDirectAction<TScheme>(handler: ActionHandler<TEnv, TSession, TScheme>) {
+    return this.addAction("direct", handler);
+  }
+  hasDirectAction() {
+    return this.actionHandlers["direct"] != null;
+  }
+
   addPropsResolver<NewPropsResolver extends PropsResolver<TEnv, TSession>>(
     propsResolver: NewPropsResolver
   ) {
@@ -230,7 +237,13 @@ export function createHandler<TApp>() {
     PropsResolver<inferEnv<TApp>, inferSession<TApp>>,
     inferSession<TApp>,
     inferEnv<TApp>
-  >({}, async () => ({}), []);
+  >(
+    {},
+    async () => {
+      return {};
+    },
+    []
+  );
 }
 
 /////////////////////////////////////////////
@@ -265,23 +278,23 @@ export type inferProps<THandler> = THandler extends PageHandler<any, any, any>
   : never;
 
 export async function resolveHandlerToProps<
-  TPageHandler extends PageHandler<any, any, any>
+  TPageHandler extends PageHandler<any, any, any, any>
 >(
   handler: TPageHandler,
-  args: HandlerArg<{}>
+  args: WeekHandlerArg<{}>
 ): Promise<HandlerGeneratedProps<TPageHandler>> {
-  function fp(name: keyof inferActions<typeof handler>) {
-    return {
-      // Note: ###CURRENT_PAGE_URL### is replaced with the current page URL on the Edge
-      action: `###CURRENT_PAGE_URL###?action=${String(name)}`,
-      method: "POST",
-    };
-  }
   const props = await handler.propsResolver(args);
 
-  return {
-    formProps: fp,
-    session: {} as inferHandlerSession<typeof handler>,
+  const returnProps: HandlerGeneratedProps<TPageHandler> = {
     ...props,
+    formProps: (name: keyof inferActions<typeof handler>) => {
+      return {
+        // Note: ###CURRENT_PAGE_URL### is replaced with the current page URL on the Edge
+        action: `###CURRENT_PAGE_URL###?action=${String(name)}`,
+        method: "POST",
+      };
+    },
+    session: {} as inferHandlerSession<typeof handler>,
   };
+  return returnProps;
 }
