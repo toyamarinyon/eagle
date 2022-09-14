@@ -1,5 +1,5 @@
 {
-  "extends": "@eagle/config/tsconfig/base.json",
+  "extends": "@meave/config/tsconfig/base.json",
   "include": ["**/*.ts"],
   "exclude": ["node_modules"]
 }

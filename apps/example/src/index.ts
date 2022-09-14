@@ -1,5 +1,4 @@
 import { meave } from "$meave";
-import { z } from "zod";
 
 export interface Env {
   // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -12,22 +11,7 @@ export interface Env {
   // MY_BUCKET: R2Bucket;
 }
 
-const sessionScheme = z.object({
-  userId: z.string(),
-});
-export const app = meave({
-  session: {
-    scheme: sessionScheme,
-    secret: "IF4B#t69!WlX$uS22blaxDvzJJ%$vEh%",
-  },
-});
-
-// // Sample middleware
-app.addMiddleware({
-  onRequest: async (request) => {
-    console.log(`request: ${request.url}`);
-  },
-});
+export const app = meave();
 
 export default {
   async fetch(

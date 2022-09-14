@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "start": "meave dev",
-    "dev-server": "eagle dev-server",
     "build": "meave build"
   },
   "dependencies": {

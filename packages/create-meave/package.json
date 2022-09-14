@@ -1,5 +1,5 @@
 {
-  "name": "create-eagle",
+  "name": "create-meave",
   "version": "0.2.0",
   "description": "",
   "main": "index.js",
@@ -15,11 +15,11 @@
   "keywords": [],
   "dependencies": {
     "@ltd/j-toml": "^1.35.0",
-    "eagle": "workspace:*",
+    "meave": "workspace:*",
     "cross-spawn": "^7.0.3"
   },
   "devDependencies": {
-    "@eagle/config": "workspace:^0.1.0",
+    "@meave/config": "workspace:^0.1.0",
     "@types/cross-spawn": "^6.0.2",
     "@types/node": "^18.0.3",
     "esbuild": "^0.15.0"

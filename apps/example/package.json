@@ -1,10 +1,10 @@
 {
-  "name": "eagle-example",
+  "name": "meave-example",
   "version": "1.2.0",
   "private": true,
   "scripts": {
-    "start": "wrangler dev",
-    "build": "node ../../packages/eagle/dist/meave.js build"
+    "start": "meave dev",
+    "build": "meave build"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.0",
