@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "./runtime/handlerBuilder.ts",
+    "placeholder.d.ts"
+  ],
+  "compilerOptions": {
+    "types": ["@cloudflare/workers-types"],
+    "outDir": "./dist",
+    "emitDeclarationOnly": true,
+    "isolatedModules": false,
+    "declaration": true,
+    // helps local development, could be dropped out of the NPM package though
+    "declarationMap": true
+  }
+}

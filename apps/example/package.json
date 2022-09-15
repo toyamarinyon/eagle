@@ -1,14 +1,14 @@
 {
-  "name": "eagle-example",
+  "name": "wille-example",
   "version": "1.2.0",
   "private": true,
   "scripts": {
-    "start": "wrangler dev",
-    "build": "node ../../packages/eagle/dist/eagle.js build"
+    "start": "wille dev",
+    "build": "wille build"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.0",
-    "@toyamarinyon/eagle": "workspace:*",
+    "wille": "workspace:*",
     "@types/react": "^18.0.15",
     "wrangler": "^2.0.18"
   },

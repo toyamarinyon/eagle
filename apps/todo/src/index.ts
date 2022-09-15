@@ -1,4 +1,5 @@
 import { wille } from "$wille";
+import { z } from "zod";
 
 export interface Env {
   // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -11,7 +12,15 @@ export interface Env {
   // MY_BUCKET: R2Bucket;
 }
 
-export const app = wille();
+const sessionScheme = z.object({
+  username: z.string(),
+});
+export const app = wille({
+  session: {
+    scheme: sessionScheme,
+    secret: "IF4B#t69!WlX$uS22blaxDvzJJ%$vEh%",
+  },
+});
 
 export default {
   async fetch(

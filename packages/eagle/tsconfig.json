@@ -1,8 +1,0 @@
-{
-  "extends": "@eagle/config/tsconfig/base.json",
-  "include": ["**/*.ts", "**/*.tsx", "placeholder.d.ts"],
-  "exclude": ["node_modules"],
-  "compilerOptions": {
-    "types": ["@cloudflare/workers-types"]
-  }
-}
