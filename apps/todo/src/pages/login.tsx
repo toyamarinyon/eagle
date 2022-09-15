@@ -1,4 +1,4 @@
-import { createHandler, inferProps } from "meave/handler";
+import { createHandler, inferProps } from "wille/handler";
 import { z } from "zod";
 import { app } from "..";
 import { Button } from "../components/button";

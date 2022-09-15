@@ -1,4 +1,4 @@
-import { createHandler } from "meave/handler";
+import { createHandler } from "wille/handler";
 import { app } from "..";
 
 export const handler = createHandler<typeof app>().addDirectAction({

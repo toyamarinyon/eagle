@@ -1,5 +1,5 @@
 
-name = "meave-example"
+name = "wille-example"
 main = "dist/index.mjs"
 compatibility_date = "2022-07-11"
 compatibility_flags = ["streams_enable_constructors"]

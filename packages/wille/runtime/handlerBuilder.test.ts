@@ -1,6 +1,6 @@
 import { test, expect, describe, vi } from "vitest";
 import { z } from "zod";
-import { Meave } from "./meave";
+import { Wille } from "./wille";
 import {
   createHandler,
   HandlerArg,
@@ -40,7 +40,7 @@ describe("handlerBuilder", () => {
     interface Env {
       MY_KV_NAMESPACE: KVNamespace;
     }
-    const app = new Meave<typeof sessionScheme, Env>(
+    const app = new Wille<typeof sessionScheme, Env>(
       {},
       { session: { scheme: sessionScheme, secret: "secret" } }
     );

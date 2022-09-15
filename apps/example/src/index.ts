@@ -1,4 +1,4 @@
-import { meave } from "$meave";
+import { wille } from "$wille";
 
 export interface Env {
   // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -11,7 +11,7 @@ export interface Env {
   // MY_BUCKET: R2Bucket;
 }
 
-export const app = meave();
+export const app = wille();
 
 export default {
   async fetch(

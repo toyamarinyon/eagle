@@ -21,8 +21,8 @@ const base = {
 // build cli
 build({
   ...base,
-  entryPoints: [join("meave.ts")],
-  outfile: join("dist", "meave.js"),
+  entryPoints: [join("wille.ts")],
+  outfile: join("dist", "wille.js"),
   sourcemap: true,
   platform: "node",
   bundle: true,

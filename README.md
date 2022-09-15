@@ -8,5 +8,5 @@ Currently alpha, under developing.
 ```sh
 npx wrangler init [name]
 cd [name]
-npx create-meave init [name]
+npx create-wille init [name]
 ```

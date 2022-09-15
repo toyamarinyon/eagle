@@ -8,20 +8,20 @@ import { Middleware } from "./middleware";
 import { Routes } from "./router";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 
-export interface MeaveOption<T = AnyZodObject> {
+export interface WilleOption<T = AnyZodObject> {
   session: {
     scheme: T;
     secret: string;
   };
 }
 
-export type inferMeaveSession<T> = T extends Meave<
+export type inferWilleSession<T> = T extends Wille<
   inferAnyZodObject<infer SessionScheme>
 >
   ? SessionScheme
   : never;
 
-export class Meave<Session = any, Env = any> {
+export class Wille<Session = any, Env = any> {
   private routes: Routes<Session>;
   private middlewareList: Middleware[] = [];
 
@@ -29,7 +29,7 @@ export class Meave<Session = any, Env = any> {
 
   constructor(
     routes: Routes,
-    option?: MeaveOption<inferAnyZodObject<Session>>
+    option?: WilleOption<inferAnyZodObject<Session>>
   ) {
     this.routes = routes;
     if (option?.session != null) {
@@ -82,7 +82,7 @@ export class Meave<Session = any, Env = any> {
   }
 
   setupSession(
-    sessionOption: MeaveOption<inferAnyZodObject<Session>>["session"]
+    sessionOption: WilleOption<inferAnyZodObject<Session>>["session"]
   ) {
     this.addMiddleware({
       onRequest: async (request) => {

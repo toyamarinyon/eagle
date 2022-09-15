@@ -12,7 +12,7 @@ function Document({ children }: { children: React.ReactNode }) {
         <title>Document</title>
       </head>
       <body>
-        <div id="meave-root">{children}</div>
+        <div id="wille-root">{children}</div>
         {"{{SCRIPT_PLACEHOLDER}}"}
       </body>
     </html>

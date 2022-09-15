@@ -22,7 +22,7 @@ interface BuildOption {
 const defaultBuildOption: BuildOption = {
   pagesDir: "src/pages",
   distDir: "dist",
-  runtimeDir: "node_modules/$meave",
+  runtimeDir: "node_modules/$wille",
   isDev: true,
 };
 
@@ -32,7 +32,7 @@ async function mkdirIfNotExists(dir: string) {
   }
 }
 
-export async function buildMeave(option?: Partial<BuildOption>) {
+export async function buildWille(option?: Partial<BuildOption>) {
   const buildOption = { ...defaultBuildOption, ...option };
 
   // Create directory for the build and runtime
@@ -81,14 +81,14 @@ export async function buildMeave(option?: Partial<BuildOption>) {
     return createHandlerTypeScriptStringOnPage(page.path);
   });
   const runtime = `
-  import { handler, PageFile, Meave, MeaveOption, inferAnyZodObject } from "meave";
+  import { handler, PageFile, Wille, WilleOption, inferAnyZodObject } from "wille";
 
   const handlers = {
     ${handlers.join("\n")}
   }
 
-  export function meave<T = unknown, Env = any>(option?: MeaveOption<inferAnyZodObject<T>>) {
-    return new Meave<inferAnyZodObject<T>, Env>(handlers, option);
+  export function wille<T = unknown, Env = any>(option?: WilleOption<inferAnyZodObject<T>>) {
+    return new Wille<inferAnyZodObject<T>, Env>(handlers, option);
   }
   `;
 

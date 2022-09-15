@@ -1,6 +1,6 @@
 import { WebCryptSession } from "webcrypt-session";
 import { AnyZodObject, z } from "zod";
-import type { Meave } from "./meave";
+import type { Wille } from "./wille";
 
 /////////////////
 /////////////////
@@ -187,12 +187,12 @@ export class PageHandler<
 /**
  * Inference session type from the App instance
  */
-type inferSession<TApp> = TApp extends Meave<infer TSession> ? TSession : {};
+type inferSession<TApp> = TApp extends Wille<infer TSession> ? TSession : {};
 
 /**
  * Inference environment type from the App instance
  */
-type inferEnv<TApp> = TApp extends Meave<any, infer TEnv> ? TEnv : {};
+type inferEnv<TApp> = TApp extends Wille<any, infer TEnv> ? TEnv : {};
 
 /**
  * Inference action type from the PageHandler instance

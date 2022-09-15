@@ -1,4 +1,4 @@
-import { meave } from "$meave";
+import { wille } from "$wille";
 import { z } from "zod";
 
 export interface Env {
@@ -15,7 +15,7 @@ export interface Env {
 const sessionScheme = z.object({
   username: z.string(),
 });
-export const app = meave({
+export const app = wille({
   session: {
     scheme: sessionScheme,
     secret: "IF4B#t69!WlX$uS22blaxDvzJJ%$vEh%",

@@ -1,9 +1,9 @@
 ---
-"meave-example": minor
+"wille-example": minor
 "todo": minor
-"@meave/config": minor
-"create-meave": minor
-"meave": minor
+"@wille/config": minor
+"create-wille": minor
+"wille": minor
 ---
 
-Revolution to Meave
+Revolution to Wille
