@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "wille dev",
-    "build": "wille build"
+    "example-build": "wille build"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.0",

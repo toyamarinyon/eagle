@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "wille dev",
-    "build": "wille build"
+    "example-build": "wille build"
   },
   "dependencies": {
     "@vanilla-extract/css": "^1.7.3",
