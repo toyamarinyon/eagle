@@ -28,7 +28,7 @@ export const blobItem = recipe({
     animationDuration: "20s",
     animationIterationCount: "infinite",
     animationTimingFunction: "linear",
-    // mixBlendMode: "overlay",
+    mixBlendMode: "overlay",
   },
   variants: {
     color: {
