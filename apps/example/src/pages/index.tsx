@@ -1,30 +1,18 @@
 import { useState } from "react";
-import { Title } from "../components/title";
-import { container } from "../styles/styles.css";
-
-function AnotherComponent() {
-  return <h1>Hello!</h1>;
-}
+import { Blob } from "../components/blob";
+import { Logo } from "../components/logo";
+import { container, text, title } from "../styles/styles.css";
 
 export default function HelloWorld() {
-  const [count, setCount] = useState(0);
   return (
-    <div
-      className={container}
-      style={{
-        color: "white",
-      }}
-    >
-      <AnotherComponent />
-      <Title />
-      <button
-        onClick={() => {
-          setCount(count + 1);
-        }}
-      >
-        click
-      </button>
-      <p>count: {count}</p>
+    <div className={container}>
+      <section className={title}>
+        <Logo />
+        <p className={text}>
+          Render React components on the edge and hydration on the browser.
+        </p>
+      </section>
+      <Blob />
     </div>
   );
 }
