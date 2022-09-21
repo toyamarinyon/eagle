@@ -1,4 +1,4 @@
-import { Blob } from "../components/symbols/blob";
+import { Blob } from "../components/blob";
 import { Logo } from "../components/logo";
 import { container, text, title } from "../styles/styles.css";
 

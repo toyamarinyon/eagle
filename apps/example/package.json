@@ -3,17 +3,19 @@
   "version": "1.3.0",
   "private": true,
   "scripts": {
-    "start": "wille dev",
+    "dev": "wille dev",
     "example-build": "wille build"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.0",
+    "@types/react": "^18.0.2",
+    "@types/react-dom": "^18.0.6",
     "wille": "workspace:*",
-    "@types/react": "^18.0.15",
     "wrangler": "^2.0.18"
   },
   "dependencies": {
     "@vanilla-extract/css": "^1.7.3",
+    "@vanilla-extract/recipes": "^0.2.5",
     "open-props": "^1.4.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
