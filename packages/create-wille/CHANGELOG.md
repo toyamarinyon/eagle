@@ -1,5 +1,14 @@
 # create-eagle
 
+## 0.3.1
+
+### Patch Changes
+
+- [#24](https://github.com/toyamarinyon/eagle/pull/24) [`909565f`](https://github.com/toyamarinyon/eagle/commit/909565f50833c2e1c683d6f53f965dd038404608) Thanks [@toyamarinyon](https://github.com/toyamarinyon)! - Add doc
+
+- Updated dependencies [[`909565f`](https://github.com/toyamarinyon/eagle/commit/909565f50833c2e1c683d6f53f965dd038404608)]:
+  - wille@0.4.1
+
 ## 0.3.0
 
 ### Minor Changes
