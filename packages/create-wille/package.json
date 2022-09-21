@@ -7,7 +7,8 @@
     "create-eagle": "dist/index.js"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "templates/"
   ],
   "scripts": {
     "build": "node build.js"
@@ -15,13 +16,15 @@
   "keywords": [],
   "dependencies": {
     "@ltd/j-toml": "^1.35.0",
-    "wille": "workspace:*",
-    "cross-spawn": "^7.0.3"
+    "@types/fs-extra": "^9.0.13",
+    "cross-spawn": "^7.0.3",
+    "fs-extra": "^10.1.0",
+    "wille": "workspace:*"
   },
   "devDependencies": {
-    "@wille/config": "workspace:^0.2.0",
     "@types/cross-spawn": "^6.0.2",
     "@types/node": "^18.0.3",
+    "@wille/config": "workspace:^0.2.0",
     "esbuild": "^0.15.0"
   },
   "author": "@toyamarinyon",

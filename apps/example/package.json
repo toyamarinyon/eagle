@@ -3,12 +3,13 @@
   "version": "1.3.0",
   "private": true,
   "scripts": {
-    "start": "wille dev",
+    "dev": "wille dev",
     "example-build": "wille build"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.0",
-    "@types/react": "^18.0.15",
+    "@types/react": "^18.0.2",
+    "@types/react-dom": "^18.0.6",
     "wille": "workspace:*",
     "wrangler": "^2.0.18"
   },

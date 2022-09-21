@@ -37,6 +37,8 @@ export async function buildWille(option?: Partial<BuildOption>) {
 
   // Create directory for the build and runtime
   await mkdirIfNotExists(buildOption.distDir);
+  await mkdirIfNotExists(join(buildOption.distDir, "public"));
+  await mkdirIfNotExists(join(buildOption.distDir, "public", "assets"));
   await mkdirIfNotExists(join(buildOption.distDir, "tmp"));
   await mkdirIfNotExists(buildOption.runtimeDir);
 

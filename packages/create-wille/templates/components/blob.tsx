@@ -1,4 +1,4 @@
-import { blobContainer, blobItem } from "./symbols/blob.css";
+import { blobContainer, blobItem } from "./blob.css";
 
 const Blob1 = (): JSX.Element => (
   <svg
