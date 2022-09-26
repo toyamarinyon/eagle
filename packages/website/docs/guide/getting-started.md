@@ -34,12 +34,10 @@ cd my-wille-app
 pnpm create wille my-wille-app
 ```
 
-Enter the newly created project directory and run the following command to start the development server:
+After the installation is complete:
 
-```bash
-pnpm start
-```
-
-You can now open http://localhost:8787 in your browser to view the page.
+- Run `pnpm dev` to start the development server on `http://localhost:8787`
+- Visit `http://localhost:8787` to view your application
+- Edit `pages/index.tsx` and see the updated result in your browser
 
 A more in-depth Getting Started guide is available in the docs.
