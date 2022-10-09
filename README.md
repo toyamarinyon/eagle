@@ -1,4 +1,4 @@
-# Eagle
+# Wille
 
 Rendering pages at the edge. Aiming to be a **"true Zero JS"** framework.
 
