@@ -22,6 +22,27 @@ const sizes = {
   auto: "auto",
 };
 
+const colorIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
+const colorPallets = [
+  "gray",
+  "red",
+  "pink",
+  "grape",
+  "violet",
+  "indigo",
+  "blue",
+  "cyan",
+  "teal",
+  "green",
+  "lime",
+  "yellow",
+  "orange",
+] as const;
+
+const colors = {
+  indigo0: OP["indigo0"],
+};
+
 const responsiveProperties = defineProperties({
   conditions: {
     mobile: {},
