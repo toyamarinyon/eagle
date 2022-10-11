@@ -36,13 +36,17 @@ export default defineConfig({
             link: "tutorial/set-up",
           },
           {
+            text: "Create a database",
+            link: "tutorial/create-a-database",
+          },
+          {
             text: "Create a login page",
             link: "tutorial/create-a-login-page",
           },
           {
-            text: 'Create a todo list page',
-            link: 'tutorial/create-a-todo-list-page',
-          }
+            text: "Create a todo list page",
+            link: "tutorial/create-a-todo-list-page",
+          },
         ],
       },
     ],
